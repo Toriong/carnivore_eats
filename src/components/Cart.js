@@ -19,6 +19,7 @@ const Cart = () => {
         if (parsedSavedOrders) {
             setConfirmedOrdersInfo(parsedSavedOrders);
         };
+        console.log("hello");
 
     }, []);
 
