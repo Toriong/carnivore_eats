@@ -1,0 +1,278 @@
+ [
+    {
+        "domDisplayName": "Mcdonalds",
+        "urlParams": "mcdonalds",
+        "image": "/mcdonalds-logo.gif",
+        "alt": "mcdonalds_logo",
+        
+        "main_meats": [
+            {
+                "name": "Regular Meat (2oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 0.6,
+                "image": " ",
+                "alt": "regular_meat_picture"
+            },
+            {
+                "name": "Quater Pounder (4oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 1.50,
+                "image": " ",
+                "alt": "quater_pounder_image"
+            },
+            {
+                "name": "sausage",
+                "price": 1.59,
+                "image": " ",
+                "alt": "sausage_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.40,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options":"american, cheddar, prepper jack",
+                "price": 0.99,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "domDisplayName": "Wendy's",
+        "urlParams": "wendys",
+        "image": "/wendys.jpeg",
+        
+        "main_meats": [
+            {
+                "name": "small patties (2oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 0.99,
+                "image": " ",
+                "alt": "small_patties_image"
+            },{
+                "name": "large patties (4oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 1.29,
+                "image": " ",
+                "alt": "large_patties_image"
+            },{
+                "name": "sausage patty",
+                "price": 1.10,
+                "image": " ",
+                "alt": "sausage_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.40,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options":"american",
+                "price": 0.99,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "domDisplayName": "Burger King",
+        "urlParams": "burgerKing",
+        "image": "/Burger-King-Logo-1969.jpeg",
+        
+        "main_meats":[
+            {
+                "name": "whopper jr. patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "whopper_jr_image"
+            },{
+                "name": "whopper patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "whopper_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options":"american, cheddar, prepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "domDisplayName": "Chick-Fil-A",
+        "urlParams": "chickFilA",
+        "image": "/chick-fil-a-logo.jpeg",
+        
+        "main_meats":[{
+            "name": "Grilled chicken fillet",
+            "price": 4.60,
+            "image": " ",
+            "alt": "grilled_chicken_image"
+        },
+        {
+            "name": "Grilled spicy chicken fillet",
+            "price": 4.60,
+            "image": " ",
+            "alt": "grilled_spicy_chicken_image"
+        },
+        {
+            "name": "Grilled Nuggets",
+            "options": [{"name":"4-ct-Grilled-Nuggets", "price": 2.32, "image": ""},{"name":"6-ct-Grilled-Nuggets", "price": 3.48, "image": "" }, {"name":"8-ct-Grilled-Nuggets", "price": 4.59, "image": ""}, {"name":"12-ct-Grilled-Nuggets", "price": 6.65, "image": ""}]
+        }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "sausage",
+                "price": 1.50,
+                "image": " ",
+                "alt": "sausage_image"
+            },
+            {
+                "name": "cheese",
+                "options": "colby, american, pepper jack",
+                "price": 0.30,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+
+        ]
+    },
+    {
+        "domDisplayName": "Sonic Drive Thru",
+        "urlParams": "sonicDriveThru",
+        "image": "/sonic-logo.jpeg",
+        
+        "main_meats":[
+            {
+                "name": "Small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "name": "Large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options":"american and pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "domDisplayName": "Jack In The Box",
+        "urlParams": "jackInTheBox",
+        "image": "/jack-in-the-box-logo.png",
+        
+        "main_meats":[
+            {
+                "name": "Small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "name": "large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "large_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options":"american and pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "domDisplayName": "Five Guys",
+        "urlParams": "fiveGuys",
+        "image": "/five_guys_logo.png",
+        
+        "main_meats":[
+            {
+                "name": "small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "name": "large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "large_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "name": "cheese",
+                "options": "colby, american, pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    }
+    
+]
+
