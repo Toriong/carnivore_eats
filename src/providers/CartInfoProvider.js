@@ -5,15 +5,13 @@ export const CartInfoContext = createContext()
 // all of this values will run on mount
 export const CartInfoProvider = (props) => {
     const confirmedOrdersDefaultVal = [{
-        id: null,
-        restaurantName: null,
-        infoOfMainMeatItem: null,
-        confirmedAddOnsToOrder: null,
-        allAddOns: null,
-        confirmedOrderQuantity: 0,
-        totalMeatPrice: 0,
-        totalConfirmedAddOnPrice: 0,
-        totalOrderPrice: 0
+        id: 0,
+        restaurant: null,
+        item: {
+            id: null,
+            quantity: 0
+        },
+        confirmedAddsOnsToOrder: []
     }];
 
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = useState(confirmedOrdersDefaultVal);

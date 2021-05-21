@@ -1,126 +1,46 @@
 [
-{
- "id": 1,
-"restaurantName": "Mcdonalds",
-"infoOfMainMeatItem": {
-                "name": "Quater Pounder (4oz)",
-                "genericNames": ["beef", "patty", "patties"],
-                "price": 1.50,
-                "image": " ",
-                "alt": "quater_pounder_image"
-            },
-        "confirmedAddOnsToOrder": [{"name": null, "price": 0}],
-        "allAddOns": [
-            {
-                "name": "bacon",
-                "price": 1.40,
-                "image": " ",
-                "alt": "bacon_image"
-            },
-            {
-                "name": "cheese",
-                "options":"american, cheddar, prepper jack",
-                "price": 0.99,
-                "image": " ",
-                "alt": "cheese_image"
-            }
-        ],
-        "confirmedOrderQuantity": 4,
-        "totalMeatPrice": 6,
-        "totalConfirmedAddOnPrice": 0,
-        "totalOrderPrice": 6
+    {
+    "id": 1,
+    "restaurant": "Mcdonalds",
+    "item": {
+        "id": "A1",
+        "quantity": 3
+    },
+    "confirmedAddsOnsToOrder":[]
 },
 {
  "id": 2,
 "restaurantName": "Mcdonalds",
-"infoOfMainMeatItem": {
-                "name": "Quater Pounder (4oz)",
-                "genericNames": ["beef", "patty", "patties"],
-                "price": 1.50,
-                "image": " ",
-                "alt": "quater_pounder_image"
+"item": {
+                "id": "A1",
+                "quantity": 5
             },
-        "confirmedAddOnsToOrder": [{"name": null, "price": 0}],
-        "allAddOns": [
-            {
-                "name": "bacon",
-                "price": 1.40,
-                "image": " ",
-                "alt": "bacon_image"
-            },
-            {
-                "name": "cheese",
-                "options":"american, cheddar, prepper jack",
-                "price": 0.99,
-                "image": " ",
-                "alt": "cheese_image"
-            }
-        ],
-        "confirmedOrderQuantity": 8,
-        "totalMeatPrice": 12,
-        "totalConfirmedAddOnPrice": 0,
-        "totalOrderPrice": 12
+        "confirmedAddOnsToOrder": []
 },
 {
  "id": 3,
 "restaurantName": "Mcdonalds",
-"infoOfMainMeatItem": {
-                "name": "Regular Meat (2oz)",
-                "genericNames": ["beef", "patty", "patties"],
-                "price": 0.6,
-                "image": " ",
-                "alt": "regular_meat_picture"
+"item":{
+    "id": "A3",
+    "quantity": 10
 },
-        "confirmedAddOnsToOrder": 
-            [{"name": null, "price": 0}],
+        "confirmedAddOnsToOrder": [],
         "allAddOns": 
             [{
-                "name": "bacon",
-                "price": 1.40,
-                "image": " ",
-                "alt": "bacon_image"
+                "id": "AA1"
             },
             {
-                "name": "cheese",
-                "options":"american, cheddar, prepper jack",
-                "price": 0.99,
-                "image": " ",
-                "alt": "cheese_image"
+                "id": "AA2"
             }
-        ],
-        "confirmedOrderQuantity": 5,
-        "totalMeatPrice": 3,
-        "totalConfirmedAddOnPrice": 0,
-        "totalOrderPrice": 3
+        ]
 },
 {
  "id": 4,
 "restaurantName": "Mcdonalds",
-"infoOfMainMeatItem": {
-                "name": "sausage",
-                "price": 1.59,
-                "image": " ",
-                "alt": "sausage_image"
-            },
-        "confirmedAddOnsToOrder": [{"name": null, "price": 0}],
-        "allAddOns": [
-            {
-                "name": "bacon",
-                "price": 1.40,
-                "image": " ",
-                "alt": "bacon_image"
-            },
-            {
-                "name": "cheese",
-                "options":"american, cheddar, prepper jack",
-                "price": 0.99,
-                "image": " ",
-                "alt": "cheese_image"
-            }
-        ],
-        "confirmedOrderQuantity": 7,
-        "totalMeatPrice": 11.13,
-        "totalConfirmedAddOnPrice": 0,
-        "totalOrderPrice": 11.13
+"item":{
+    "id": "A2",
+    "quantity": 5
+},
+        "confirmedAddOnsToOrder": []
 }
 ]

@@ -3,7 +3,7 @@ import { CartInfoContext } from '../providers/CartInfoProvider';
 import { FaAngleUp } from 'react-icons/fa';
 import '../css/meatItemModal.css'
 
-const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, orderFromCart, isMeatModalOpenWithCartInfo, isCartButtonsOnModal }) => {
+const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, orderFromCart, isMeatModalOpenWithCartInfo, isCartButtonsOnModal, setIsCartOpen }) => {
     const { _computeConfirmedAddOns, _confirmedOrdersInfo, _updateCartInfo } = useContext(CartInfoContext);
 
     const [updateCartInfo, setUpdateCartInfo] = _updateCartInfo
@@ -22,10 +22,8 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
 
     const [mainMeatCount, setMainMeatCount] = useState(1);
-    const [orderTotal, setOrderTotal] = useState(meatItemInfo.price);
+    const [orderTotal, setOrderTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
-    const [wasOrderButtonPressed, setWasOrderButtonPressed] = useState(false);
-    const [isCartPriceAndQuantityNeededToBeUpdate, setIsCartPriceAndQuantityNeededToBeUpdate] = useState(false);
     const [saveOrdersIntoLocalStorage, setSaveOrdersIntoLocalStorage] = useState(false);
     const [isMinusButtonDisabled, setIsMinusButtonDisabled] = useState(false);
 
@@ -41,8 +39,8 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
 
     const removeOrder = () => {
         setConfirmedOrdersInfo(confirmedOrdersInfo.filter((order) => order.id !== orderFromCart.id));
-        setIsCartPriceAndQuantityNeededToBeUpdate(true);
-        setSaveOrdersIntoLocalStorage(true);
+        setIsCartOpen(false);
+        setIsMeatItemModalOpen(false);
     }
 
     // will respond to the user pressing the update button
@@ -51,18 +49,20 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
             if (order.id === orderFromCart.id) {
                 return {
                     ...order,
-                    confirmedOrderQuantity: mainMeatCount,
+                    item: {
+                        ...order,
+                        quantity: mainMeatCount
+                    },
                     totalMeatPrice: (mainMeatCount * meatItemInfo.price),
                     totalOrderPrice: orderTotal
 
                 }
-            } else if (order.id !== orderFromCart.id) {
-                return order;
             }
+
+            return order;
         }))
-        setIsCartPriceAndQuantityNeededToBeUpdate(!isCartPriceAndQuantityNeededToBeUpdate);
-        setSaveOrdersIntoLocalStorage(true);
-        console.log("updateOrder was executed")
+        setIsMeatItemModalOpen(false);
+        console.log("updateOrder was executed");
     }
 
 
@@ -70,8 +70,8 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
     // presents the meat item modal with the info of the selected order from the cart
     useEffect(() => {
         if (isMeatModalOpenWithCartInfo) {
-            setMainMeatCount(orderFromCart.confirmedOrderQuantity);
-            setOrderTotal((orderFromCart.confirmedOrderQuantity * meatItemInfo.price));
+            setMainMeatCount(orderFromCart.item.quantity);
+            setOrderTotal((orderFromCart.item.quantity * meatItemInfo.price));
         }
     }, [isMeatModalOpenWithCartInfo]);
 
@@ -80,6 +80,7 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
         setOrderTotal((mainMeatCount * meatItemInfo.price));
     }, [mainMeatCount])
 
+    // checks if the count is at one. If it is, then disable the minus button
     useEffect(() => {
         if (mainMeatCount === 1) {
             setIsMinusButtonDisabled(true);
@@ -91,19 +92,22 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
     }, [mainMeatCount])
 
     // save confirmedOrders into local storage
-    useEffect(() => {
-        if (saveOrdersIntoLocalStorage) {
-            console.log(confirmedOrdersInfo)
-            localStorage.setItem("confirmed orders", JSON.stringify(confirmedOrdersInfo));
-            setSaveOrdersIntoLocalStorage(false);
-            console.log('orders saved')
-            setIsMeatItemModalOpen(false);
-        }
-    }, [saveOrdersIntoLocalStorage]);
+    // useEffect(() => {
+    //     if (saveOrdersIntoLocalStorage) {
+    //         console.log(confirmedOrdersInfo)
+    //         localStorage.setItem("confirmed orders", JSON.stringify(confirmedOrdersInfo));
+    //         setSaveOrdersIntoLocalStorage(false);
+    //         console.log('orders saved')
+    //         setIsMeatItemModalOpen(false);
+    //     }
+    // }, [saveOrdersIntoLocalStorage]);
 
-    useEffect(() => {
-        console.log(mainMeatCount)
-    })
+    // useEffect(() => {
+    //     const ordersStringify = JSON.stringify(confirmedOrdersInfo)
+    //     localStorage.setItem("confirmed orders", ordersStringify);
+    //     console.log('orders saved');
+    // }, [confirmedOrdersInfo]);
+
 
     return <div className="selected-food-modal">
         <div className="picture-container">
@@ -166,7 +170,7 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
                         </div>
                         :
                         <div>
-                            {meatItemInfo.price}
+                            {meatItemInfo.price.toFixed(2)}
                         </div>
                     }
                 </div>
