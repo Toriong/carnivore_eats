@@ -82,3 +82,22 @@
 .total-price p {
   color: black;
 }
+
+.addOn-header-container {
+  width: 100%;
+  height: 30%;
+}
+
+.addOn-header-container > div {
+  display: inline-block;
+  margin: 0px 5px 0px 5px;
+}
+
+.add-on-names-container {
+  width: 100%;
+  height: 80px;
+}
+
+.add-on-names-container p {
+  margin: 0px 5px 0px 10px;
+}

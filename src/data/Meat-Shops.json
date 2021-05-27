@@ -51,7 +51,6 @@
         "name": "Wendy's",
         "url": "wendys",
         "image": "/wendys.jpeg",
-        
         "main_meats": [
             {
                 "id": "B1",

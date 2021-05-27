@@ -1,46 +1,32 @@
 [
     {
-    "id": 1,
-    "restaurant": "Mcdonalds",
-    "item": {
-        "id": "A1",
+        "orderId": 1,
+        "meatItemId": "A1",
+        "restaurant": "Mcdonalds",
         "quantity": 3
     },
-    "confirmedAddsOnsToOrder":[]
-},
-{
- "id": 2,
-"restaurantName": "Mcdonalds",
-"item": {
-                "id": "A1",
-                "quantity": 5
-            },
-        "confirmedAddOnsToOrder": []
-},
-{
- "id": 3,
-"restaurantName": "Mcdonalds",
-"item":{
-    "id": "A3",
-    "quantity": 10
-},
-        "confirmedAddOnsToOrder": [],
-        "allAddOns": 
-            [{
-                "id": "AA1"
-            },
-            {
-                "id": "AA2"
-            }
+    {
+        "orderId": 2,
+        "meatItemId": "A1",
+        "restaurant": "Mcdonalds",
+        "quantity": 5,
+        "addOns": [
+          "AA2"
         ]
-},
-{
- "id": 4,
-"restaurantName": "Mcdonalds",
-"item":{
-    "id": "A2",
-    "quantity": 5
-},
-        "confirmedAddOnsToOrder": []
-}
+    },
+    {
+        "orderId": 3,
+        "meatItemId": "A3",
+        "restaurant": "Mcdonalds",
+        "quantity": 10
+    },
+    {
+        "orderId": 4,
+        "meatItemId": "A2",
+        "restaurant": "Mcdonalds",
+        "quantity": 5,
+        "addOns": [
+            "AA1", "AA2"
+        ]
+    }
 ]
