@@ -1,64 +1,68 @@
 import React, { useEffect, useState, useContext } from 'react'
+import meatShops from '../data/Meat-Shops.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
+import { CartInfoContext } from '../providers/CartInfoProvider'
+
 
 
 // when the user clicks on an order from the cart, have the add-ons be computed and have the box of the particular be checked
 
 // passed down computeConfirmedAddOns and its function
 // pass down the id of the addOnItem
-const AddOnItem = ({ addOnItem, mainMeatCount, setOrderTotal, meatItemInfoPrice, confirmedAddOnsInfoInCart, orderTotal, setAddOns, addOns, computeConfirmedAddOns, setComputeConfirmedAddOns }) => {
-    // check for matching names in the selectedAddOns and addOnItem.name. If the names match then set boxClicked to true.
+const AddOnItem = ({ addOnItem, mainMeatCount, setOrderTotal, meatItemInfoPrice, confirmedAddOnsInfoInCart, orderTotal, setAddOns, addOns, computeConfirmedAddOns, setComputeConfirmedAddOns, orderFromCart, setOrderFromCart }) => {
+
+    const { _confirmedOrdersInfo } = useContext(CartInfoContext);
+
+    const [confirmedOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
 
     const [boxClicked, setBoxClicked] = useState(false);
+    const restaurantInfo = meatShops.find((restaurant) => restaurant.name === confirmedOrdersInfo[0].restaurant);
 
-    // pass down function that will keep track of what add-ons that are selected by the user. Call this function addOns and create in the MeatItem modal.
+    // when this function is executed, create a new keyName value pair in the object that is stored in orderFromCart, call this keyName 'addOn', insert the id of the addOn there
+    // get the id of the add-on that was selected
     const addOnAddedToOrder = () => {
-        // find a way to first get the id of the addOn that was clicked, second, use it to find the add-on in the array that holds all of the add-ons in the object that holds all of the info the restaurant. 
-        setAddOns([...addOns, {
-            name: addOnItem.name,
-            price: addOnItem.price
-        }]);
+        // check if there is an existing add-on in the orderFromCart object, if there is then use the spread operator to add another add-on to the existing list
+        const updatedAddOnList = orderFromCart.addOns !== undefined ? [...orderFromCart.addOns, addOnItem.id] : [addOnItem.id]
+        setOrderFromCart({
+            ...orderFromCart,
+            addOns: updatedAddOnList
+        });
         setBoxClicked(!boxClicked);
     };
 
     // deletes an addOn from user's order
     const addOnTakenOffOrder = () => {
+        // if there is only one add-on in the array that is stored in orderFromCart.addOns, then delete the whole key-name value pair of the addOn
+        const updatedAddOnList = orderFromCart.addOns.filter((addOnId) => addOnId !== addOnItem.id)
+        setOrderFromCart({
+            ...orderFromCart,
+            addOns: updatedAddOnList
+        });
+
+        console.log(orderFromCart);
         setBoxClicked(!boxClicked);
-        setAddOns(addOns.filter((addOn) => addOn.name !== addOnItem.name
-        ));
     };
 
-    // adds the price of the addOns to the total price of the order 
-    useEffect(() => {
-        setOrderTotal(((mainMeatCount * meatItemInfoPrice) + (addOns.map((addOn) => addOn.price).reduce((priceN, priceNPlus1) => priceN + priceNPlus1) * mainMeatCount)).toFixed(2));
-    }, [boxClicked, mainMeatCount, meatItemInfoPrice, setOrderTotal]);
 
+
+    // checking off the box
     useEffect(() => {
-        if (confirmedAddOnsInfoInCart.length !== 0 && computeConfirmedAddOns) {
-            confirmedAddOnsInfoInCart.forEach((addOn) => {
-                if (addOn.name === addOnItem.name) {
+        if (orderFromCart.addOns !== undefined) {
+            orderFromCart.addOns.forEach((addOnId) => {
+                if (addOnId === addOnItem.id) {
                     setBoxClicked(true);
-                };
-            });
+                }
+            })
         }
-    }, [confirmedAddOnsInfoInCart, addOnItem]);
+    }, []);
 
-    // compute the sum of the add-ons, times it by the quantity of the order, and add it to the product between the quantity of the order and the price of the meat 
-    useEffect(() => {
-        // console.log(selectedAddOnsInfoToOrder)
-        if (computeConfirmedAddOns) {
-            setOrderTotal(orderTotal + (mainMeatCount * (confirmedAddOnsInfoInCart.map((addOn) => addOn.price)).reduce((priceN, priceNMinus1) => priceN + priceNMinus1)))
-            //put the cart add-ons here
-            setAddOns([...addOns, ...confirmedAddOnsInfoInCart.map((addOn) => addOn)]);
-            setComputeConfirmedAddOns(false);
-        }
-    }, [computeConfirmedAddOns, confirmedAddOnsInfoInCart, mainMeatCount, orderTotal, setOrderTotal,]);
+
 
     return <div className="add-on">
         <div className="check-container">
             {boxClicked ?
-                <FontAwesomeIcon icon={faCheckSquare} onClick={() => { addOnTakenOffOrder(addOnItem.price) }} />
+                <FontAwesomeIcon icon={faCheckSquare} onClick={addOnTakenOffOrder} />
                 :
                 <FontAwesomeIcon icon={faSquare} onClick={addOnAddedToOrder} />
             }

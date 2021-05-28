@@ -18,8 +18,11 @@ export const CartInfoProvider = (props) => {
     const [computeConfirmedAddOns, setComputeConfirmedAddOns] = useState(false);
     // the updateCartInfo state value must be accessible in multiple components (such as the meat item modal component) in order to update the cart info
     const [updateCartInfo, setUpdateCartInfo] = useState(false);
+
     // all of the add-ons that might be in the cart order
     const [selectedAddOns, setSelectedAddOns] = useState([{ name: null, price: 0 }]);
+
+
 
 
     return <CartInfoContext.Provider value={{

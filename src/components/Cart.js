@@ -17,14 +17,17 @@ const Cart = () => {
     const [propsForMeatItemModal, setPropsForMeatItemModal] = useState({
         ordrId: 0,
         meatItemId: "",
-        restaurant: "Mcdonalds",
-        confirmedAddsOnsToOrder: []
+        restaurant: "",
+        addOns: []
     });
 
+    useEffect(() => {
+        console.log(confirmedOrdersInfo);
+    }, [confirmedOrdersInfo]);
 
     const closeMeatItemModal = () => {
         setIsMeatItemModalOpen(false);
-    }
+    };
 
     const cartToggle = () => {
         setIsCartOpen(!isCartOpen);
@@ -37,9 +40,8 @@ const Cart = () => {
             const parsedSavedOrders = JSON.parse(savedOrders);
             setConfirmedOrdersInfo(parsedSavedOrders);
         } else {
-            console.log("confirmedOrdersInfo set");
+            // console.log("confirmedOrdersInfo set");
             setConfirmedOrdersInfo([...dummyData]);
-
         };
     }, []);
 
@@ -47,10 +49,10 @@ const Cart = () => {
 
     // this will save the orders into the local storage everytime the cart gets updated 
     useEffect(() => {
-        console.log(confirmedOrdersInfo);
+        // console.log(confirmedOrdersInfo);
         const dummyOrdersString = JSON.stringify(confirmedOrdersInfo);
         localStorage.setItem("confirmed orders", dummyOrdersString);
-        console.log("orders saved");
+        // console.log("orders saved");
     }, [confirmedOrdersInfo]);
 
     // will compute the total quantity sum of the cart
@@ -59,12 +61,13 @@ const Cart = () => {
     // if not, it will return a zero. 
     const cartQuantityTotal = confirmedOrdersInfo.length !== 0 ? confirmedOrdersInfo.map((order) => order.quantity).reduce((numA, numB) => numA + numB) : 0;
 
-    useEffect(() => {
-        console.log(cartQuantityTotal);
-    }, [cartQuantityTotal]);
 
     // stores the meat list of the restaurant where all of the orders come from
-    const restaurantInfo = meatShops.find((restaurant) => restaurant.name === dummyData[0].restaurant);
+    // WHAT IS HAPPENING: when there is nothing in the confirmedOrdersInfo state value, then don't do anything
+    const restaurantInfo = confirmedOrdersInfo.length !== 0 && meatShops.find((restaurant) => restaurant.name === confirmedOrdersInfo[0].restaurant);
+    // useEffect(() => {
+    //     console.log(restaurantInfo);
+    // })
 
     const openMeatItemModal = (cartOrder) => () => {
         setPropsForMeatItemModal(
@@ -73,33 +76,37 @@ const Cart = () => {
         setIsMeatItemModalOpen(true);
     }
 
+    // compute the sum of the add-ons and the meat item price
+    let meatItemPrices = [];
+    let addOnPrices = [];
 
 
-
-    // where each price of the orders will be stored
-    const cartMeatItemPriceList = []
-
-    // total price of the meat items
-    confirmedOrdersInfo.forEach((order) => {
-        restaurantInfo.main_meats.map((meat) => {
-            if (meat.id === order.meatItemId) {
-                cartMeatItemPriceList.push(order.quantity * meat.price)
+    restaurantInfo !== undefined && confirmedOrdersInfo.forEach((order) => {
+        restaurantInfo.main_meats.forEach((meat) => {
+            if (order.meatItemId === meat.id) {
+                meatItemPrices.push(meat.price * order.quantity);
             }
         })
     });
 
-    const addOnPriceList = []
 
-    confirmedOrdersInfo.forEach((order) => {
-        order.addOns.map((addOnId) => {
-            restaurantInfo.add_ons.map((addOn) => {
-                addOn.id === addOnId && addOnPriceList.push(addOn.price * order.quantity);
-            });
-        })
-    });
+    restaurantInfo !== undefined && confirmedOrdersInfo.forEach((order) => {
+        if (order.addOns) {
+            order.addOns.forEach((addOnId) => {
+                restaurantInfo.add_ons.forEach((addOn) => {
+                    if (addOnId === addOn.id) {
+                        addOnPrices.push(addOn.price * order.quantity);
+                    }
+                })
+            })
+        };
+    })
 
-    // calculate the sum of cartPriceList and stores it into this var to displace onto the UI
-    const cartTotalPrice = cartMeatItemPriceList.length !== 0 && cartMeatItemPriceList.reduce((numA, numB) => numA + numB) + addOnPriceList.reduce((numA, numB) => numA + numB);
+    const totalAddOnsPrice = addOnPrices.length !== 0 ? addOnPrices.reduce((numA, numB) => numA + numB) : 0;
+
+    const totalMeatItemsPrice = meatItemPrices.length !== 0 ? meatItemPrices.reduce((numA, numB) => numA + numB) : 0;
+
+    const cartTotalPrice = totalMeatItemsPrice + totalAddOnsPrice;
 
 
     // create a function that will display the total sum of the add-ons of an order
@@ -112,6 +119,9 @@ const Cart = () => {
         return <p>${AddOnProduct.toFixed(2)}</p>
     };
 
+    // this will display the total sum of the order
+    // DEBUG NOTES:
+    // the 'cartOrder' parameter is not the updated one
     const DisplayOrderPriceSum = ({ cartOrder, restaurantInfo }) => {
         let orderPriceList = []
         let meatItemPriceSum;
@@ -139,11 +149,10 @@ const Cart = () => {
         addOnsSum > 0 && orderPriceList.push(addOnsSum * cartOrder.quantity);
 
         const totalOrderPrice = orderPriceList.reduce((numA, numB) => numA + numB);
-
+        // debugger
         return <div>
             <p>${totalOrderPrice.toFixed(2)}</p>
         </div>
-
     }
 
 
@@ -183,7 +192,7 @@ const Cart = () => {
                                 <div className="price-of-item" >
                                     <DisplayOrderPriceSum cartOrder={order} restaurantInfo={restaurantInfo} />
                                 </div>
-                                {order.addOns && <article className="addOn-container">
+                                {order.addOns !== undefined && <article className="addOn-container">
                                     <article className="addOn-header-container">
                                         <div className="addOn-title">
                                             <h5>ADD-ONS</h5>
@@ -207,7 +216,7 @@ const Cart = () => {
                                 Go to checkout
                                     </div>
                             <div className="total-price">
-                                <p>${cartTotalPrice}</p>
+                                <p>${cartTotalPrice.toFixed(2)}</p>
                             </div>
                         </div>
                     </Link>}
@@ -237,23 +246,3 @@ export default Cart;
 
 
 
-// {
-//     order.totalConfirmedAddOnPrice !== 0 && <div className="addOn-container">
-//         <div className="addOn-title">
-//             <h5>ADD-ONS</h5>
-//         </div>
-//         <div>
-//             {/* display the total price of the add-ons here */}
-//             <p>
-//                 ${order.totalConfirmedAddOnPrice.toFixed(2)}
-//             </p>
-//         </div>
-//         {/* display all of the add-ons that the user selected here */}
-//         {order.confirmedAddOnsToOrder.map((addOn) => <div className="addOn-names">
-//             <div>
-//                 <h6>{addOn.name}</h6>
-//             </div>
-//         </div>
-//         )}
-//     </div>
-// }
