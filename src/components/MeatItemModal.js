@@ -8,87 +8,60 @@ import '../css/meatItemModal.css'
 // NOTES
 // may not need orderFromCart_ 
 
+// this is where all of the computations/editing for an order will occur
 const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, orderFromCart, isMeatModalOpenWithCartInfo, isCartButtonsOnModal, setIsCartOpen }) => {
     const { _confirmedOrdersInfo } = useContext(CartInfoContext);
-
-
 
     // will store an array of the orders that will presented in the cart
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
 
-    const [mainMeatCount, setMainMeatCount] = useState(1);
-    const [orderTotal, setOrderTotal] = useState(0);
+    // will keep track the of the quantity of the order
+    const [orderQuantityCount, setOrderQuantityCount] = useState(1);
+    const [orderPriceTotal, setOrderPriceTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
     const [isMinusButtonDisabled, setIsMinusButtonDisabled] = useState(false);
-    // const [wasQuantityButtonPressed, setWasQuantityButtonPressed] = useState(false);
-    // this is the function that will keep track of the changes when an add-on has been added or deleted
+
+    // will store the selected order from the cart to add add-ons to it or to remove it
     const [orderFromCart_, setOrderFromCart_] = useState(orderFromCart);
-    const restaurantInfo = meatShops.find((restaurant) => restaurant.name === confirmedOrdersInfo[0].restaurant);
 
-    // when an add-on is added or deleted, have this useEffect run
-    useEffect(() => {
-        let addOnsPriceList = [];
-        let addOnsSum;
-        orderFromCart_.addOns !== undefined && orderFromCart_.addOns.forEach((addOnId) => {
-            restaurantInfo.add_ons.forEach((addOn) => {
-                addOn.id === addOnId && addOnsPriceList.push(addOn.price);
-            })
-        });
-        addOnsSum = addOnsPriceList.length !== 0 ? addOnsPriceList.reduce((numA, numB) => numA + numB) : 0;
-        setOrderTotal((mainMeatCount * meatItemInfo.price) + (addOnsSum * mainMeatCount));
-        console.log('cart order udpated');
-        console.log(orderFromCart_);
-    }, [orderFromCart_.addOns]);
-
+    // will store all of the info pertaining to the restaurant of the order
+    const restaurantInfo = meatShops.find((restaurant) => restaurant.name === restaurantName);
 
     const addOnMenuToggle = () => {
         setIsAddOnMenuOpen(!isAddOnMenuOpen);
-    }
+    };
 
-    // decreases the quantity count of the order
     const decreaseCount = () => {
-        setMainMeatCount(mainMeatCount - 1);
-    }
+        setOrderQuantityCount(orderQuantityCount - 1);
+    };
 
-    // increases the quantity count of the order
     const increaseCount = () => {
-        setMainMeatCount(mainMeatCount + 1);
-    }
-
-    // will update the total price of the order only when the quantity buttons are pressed
-    useEffect(() => {
-        let addOnsPriceList = [];
-        let addOnsSum;
-        orderFromCart_.addOns !== undefined && orderFromCart_.addOns.forEach((addOnId) => {
-            restaurantInfo.add_ons.forEach((addOn) => {
-                addOn.id === addOnId && addOnsPriceList.push(addOn.price);
-            })
-        });
-        addOnsSum = addOnsPriceList.length !== 0 && addOnsPriceList.reduce((numA, numB) => numA + numB);
-        setOrderTotal((mainMeatCount * meatItemInfo.price) + (addOnsSum * mainMeatCount));
-    }, [mainMeatCount]);
+        setOrderQuantityCount(orderQuantityCount + 1);
+    };
 
     // will remove the selected cart order from the cart 
     const removeOrder = () => {
         setConfirmedOrdersInfo(confirmedOrdersInfo.filter((order) => order.orderId !== orderFromCart.orderId));
         setIsCartOpen(false);
         setIsMeatItemModalOpen(false);
-    }
+    };
 
     // will respond to the user pressing the update button
     const updateOrder = () => {
-        // check if there are any addOns, if there, check if it is empty so that you can delete it
-        // have the updated order have the following changes: -the quantity of the order, and if there no add-ons, have the add-ons be deleted. 
+        // will check if there are any add-ons in the order
         if (orderFromCart_.addOns) {
-            if (orderFromCart_.addOns.length === 0) {
-                setOrderFromCart_(delete orderFromCart_.addOns)
-            }
-        }
+            // will check if the array that is in the addOns key of the order is empty
+            const noAddOnsArePresent = orderFromCart_.addOns.length === 0;
+            if (noAddOnsArePresent) {
+                setOrderFromCart_(delete orderFromCart_.addOns);
+            };
+        };
+        // will update the selected order by via its ID 
         const updatedOrder = confirmedOrdersInfo.map((order) => {
             if (order.orderId === orderFromCart_.orderId) {
                 return {
                     ...orderFromCart_,
-                    quantity: mainMeatCount
+                    quantity: orderQuantityCount
                 }
             }
             return order;
@@ -100,52 +73,68 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
         console.log("updateOrder was executed");
     }
 
-    // will open the add-on menu, when there are add-ons present in the order
+    // will compute the total price of the cart when the following occurs:
+    // an add-on was added to the cart
+    // an add-on was deleted from the cart
+    // when the quantity buttons are pressed 
     useEffect(() => {
-        orderFromCart.addOns !== undefined && setIsAddOnMenuOpen(true);
-    }, []);
+        let addOnsPrices = [];
+        let addOnsSum;
+        // will check if there are any add-ons in the selected cart order
+        // if there are add-ons, then get the price of the addo-ons in the add-on list in the ;'restaurantInfo' and store them into the addOnsPricesList
+        orderFromCart_.addOns && orderFromCart_.addOns.forEach((addOnId) => {
+            restaurantInfo.add_ons.forEach((addOn) => {
+                addOn.id === addOnId && addOnsPrices.push(addOn.price);
+            })
+        });
+
+        const addOnsPricesArePresent = addOnsPrices.length !== 0;
+        // store the sum of the 'addOnsPriceList'
+        addOnsSum = addOnsPricesArePresent && addOnsPrices.reduce((numA, numB) => numA + numB);
+        // will compute the total price of the order
+        setOrderPriceTotal(((orderQuantityCount * meatItemInfo.price) + (addOnsSum * orderQuantityCount)).toFixed(2));
+    }, [orderFromCart_.addOns, orderQuantityCount, restaurantInfo.add_ons, meatItemInfo.price]);
 
 
+    useEffect(() => {
+        if (orderQuantityCount === 1) {
+            setIsMinusButtonDisabled(true);
+        } else if (orderQuantityCount !== 1) {
+            setIsMinusButtonDisabled(false);
+        }
+    }, [orderQuantityCount]);
 
-    // computes the total price of the cart order with or without add-ons
+    // computes the total price of the cart order with or without add-ons only on the initial render of the component
     useEffect(() => {
         let totalMeatPrice;
-        let addOnsPriceList = [];
-        let orderSum;
-        // will check if the a cart order was opened in a meat item modal
+        let addOnsPrices = [];
+        let orderPriceSum;
+        // will check if the cart order was opened in a meat item modal
         if (isMeatModalOpenWithCartInfo) {
             // will check if there are any addOns in the order
-            if (orderFromCart_.addOns !== undefined) {
+            if (orderFromCart_.addOns) {
                 orderFromCart_.addOns.forEach((addOnId) => {
                     restaurantInfo.add_ons.forEach((addOn) => {
                         if (addOnId === addOn.id) {
-                            addOnsPriceList.push(addOn.price * orderFromCart_.quantity);
+                            addOnsPrices.push(addOn.price * orderFromCart_.quantity);
                         }
                     });
-                })
-            }
-            let addOnsSum = addOnsPriceList.length !== 0 ? addOnsPriceList.reduce((numA, numB) => numA + numB) : 0;
+                });
+            };
+            // will compute the sum of the addOns
+            const addOnsPricesArePresent = addOnsPrices.length !== 0;
+            let addOnsSum = addOnsPricesArePresent && addOnsPrices.reduce((numA, numB) => numA + numB);
             totalMeatPrice = meatItemInfo.price * orderFromCart_.quantity
-            setMainMeatCount(orderFromCart_.quantity);
-            orderSum = totalMeatPrice + addOnsSum;
-            setOrderTotal(orderSum);
+            setOrderQuantityCount(orderFromCart_.quantity);
+            orderPriceSum = totalMeatPrice + addOnsSum;
+            setOrderPriceTotal(orderPriceSum);
         }
     }, []);
 
-
-
-
-
-    // checks if the count is at one. If it is, then disable the minus button
+    // will open the add-on menu, when there are add-ons present in the order on the initial render of the component
     useEffect(() => {
-        if (mainMeatCount === 1) {
-            setIsMinusButtonDisabled(true);
-        } else if (mainMeatCount !== 1) {
-            setIsMinusButtonDisabled(false);
-        }
-    }, [mainMeatCount])
-
-
+        orderFromCart.addOns && setIsAddOnMenuOpen(true);
+    }, []);
 
     return <section className="selected-food-modal">
         <article className="picture-container">
@@ -169,7 +158,9 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
                     <div className="add-ons-list-container">
                         {restaurantInfo.add_ons.map((addOnItem) => {
                             return <AddOnItem
-                                addOnItem={addOnItem} mainMeatCount={mainMeatCount} setOrderTotal={setOrderTotal} meatItemInfoPrice={meatItemInfo.price} orderFromCart={orderFromCart_} setOrderFromCart={setOrderFromCart_}
+                                addOnItem={addOnItem}
+                                orderFromCart={orderFromCart_}
+                                setOrderFromCart={setOrderFromCart_}
                             />
                         })}
                     </div>
@@ -186,11 +177,12 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
             }
         </article>
         {/* if a true boolean was passed in for 'isCartButtonsOnModal' then show the 'Remove item' button */}
-        {isCartButtonsOnModal && <div className="remove-item-container" onClick={removeOrder}>
-            <h4>
-                Remove item
-            </h4>
-        </div>}
+        {isCartButtonsOnModal &&
+            <div className="remove-item-container" onClick={removeOrder}>
+                <h4>
+                    Remove item
+                </h4>
+            </div>}
         <article className="quantity-and-add-to-cart-container">
             <article className="add-to-cart-button-quantity-button-container">
                 {/* will  disabled the minus button only if the count is at one*/}
@@ -204,7 +196,7 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
                             -
                         </div>
                     }
-                    <div className="count">{mainMeatCount}</div>
+                    <div className="count">{orderQuantityCount}</div>
                     <div className="plus-sign" onClick={increaseCount}>
                         +
                     </div>
@@ -218,13 +210,13 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
                         <div>
                             Order
                         </div>
-                        {orderTotal > meatItemInfo.price ?
+                        {orderPriceTotal > meatItemInfo.price ?
                             <div>
-                                {orderTotal.toFixed(2)}
+                                ${orderPriceTotal}
                             </div>
                             :
                             <div>
-                                {meatItemInfo.price.toFixed(2)}
+                                ${meatItemInfo.price}
                             </div>
                         }
                     </div>
@@ -233,13 +225,13 @@ const MeatItemModal = ({ meatItemInfo, restaurantName, setIsMeatItemModalOpen, o
                         <div>
                             Add
                         </div>
-                        <div className="count">{mainMeatCount}</div>
+                        <div className="count">{orderQuantityCount}</div>
                         <div>
                             to order
                         </div>
-                        {orderTotal > meatItemInfo.price ?
+                        {orderPriceTotal > meatItemInfo.price ?
                             <div>
-                                {orderTotal.toFixed(2)}
+                                {orderPriceTotal}
                             </div>
                             :
                             <div>

@@ -1,29 +1,20 @@
-import React, { useEffect, useState, useContext } from 'react'
-import meatShops from '../data/Meat-Shops.json';
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
-import { CartInfoContext } from '../providers/CartInfoProvider'
 
 
 
-// when the user clicks on an order from the cart, have the add-ons be computed and have the box of the particular be checked
 
-// passed down computeConfirmedAddOns and its function
-// pass down the id of the addOnItem
-const AddOnItem = ({ addOnItem, mainMeatCount, setOrderTotal, meatItemInfoPrice, confirmedAddOnsInfoInCart, orderTotal, setAddOns, addOns, computeConfirmedAddOns, setComputeConfirmedAddOns, orderFromCart, setOrderFromCart }) => {
-
-    const { _confirmedOrdersInfo } = useContext(CartInfoContext);
-
-    const [confirmedOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
+// will list all of the add-ons of the selected restaurant
+const AddOnItem = ({ addOnItem, orderFromCart, setOrderFromCart }) => {
 
     const [boxClicked, setBoxClicked] = useState(false);
-    const restaurantInfo = meatShops.find((restaurant) => restaurant.name === confirmedOrdersInfo[0].restaurant);
 
-    // when this function is executed, create a new keyName value pair in the object that is stored in orderFromCart, call this keyName 'addOn', insert the id of the addOn there
-    // get the id of the add-on that was selected
-    const addOnAddedToOrder = () => {
+    // will add an add-on to the user's order
+    const addAddOnToOrder = () => {
         // check if there is an existing add-on in the orderFromCart object, if there is then use the spread operator to add another add-on to the existing list
-        const updatedAddOnList = orderFromCart.addOns !== undefined ? [...orderFromCart.addOns, addOnItem.id] : [addOnItem.id]
+        const newAddOn = addOnItem.id
+        const updatedAddOnList = orderFromCart.addOns ? [...orderFromCart.addOns, newAddOn] : [newAddOn]
         setOrderFromCart({
             ...orderFromCart,
             addOns: updatedAddOnList
@@ -32,39 +23,34 @@ const AddOnItem = ({ addOnItem, mainMeatCount, setOrderTotal, meatItemInfoPrice,
     };
 
     // deletes an addOn from user's order
-    const addOnTakenOffOrder = () => {
-        // if there is only one add-on in the array that is stored in orderFromCart.addOns, then delete the whole key-name value pair of the addOn
-        const updatedAddOnList = orderFromCart.addOns.filter((addOnId) => addOnId !== addOnItem.id)
+    const deleteAddOnFromOrder = () => {
+        const deleteThisAddOn = addOnItem.id
+        const updatedAddOnList = orderFromCart.addOns.filter((addOnId) => addOnId !== deleteThisAddOn)
         setOrderFromCart({
             ...orderFromCart,
             addOns: updatedAddOnList
         });
-
-        console.log(orderFromCart);
         setBoxClicked(!boxClicked);
     };
 
-
-
-    // checking off the box
+    // check off the addOn box on the initial render of the component if there are any addOns
     useEffect(() => {
-        if (orderFromCart.addOns !== undefined) {
+        if (orderFromCart.addOns) {
             orderFromCart.addOns.forEach((addOnId) => {
                 if (addOnId === addOnItem.id) {
                     setBoxClicked(true);
-                }
+                };
             })
         }
     }, []);
 
 
-
-    return <div className="add-on">
+    return <article className="add-on">
         <div className="check-container">
             {boxClicked ?
-                <FontAwesomeIcon icon={faCheckSquare} onClick={addOnTakenOffOrder} />
+                <FontAwesomeIcon icon={faCheckSquare} onClick={deleteAddOnFromOrder} />
                 :
-                <FontAwesomeIcon icon={faSquare} onClick={addOnAddedToOrder} />
+                <FontAwesomeIcon icon={faSquare} onClick={addAddOnToOrder} />
             }
         </div>
         <div className="add-on-name">
@@ -73,7 +59,7 @@ const AddOnItem = ({ addOnItem, mainMeatCount, setOrderTotal, meatItemInfoPrice,
         <div>
             +{addOnItem.price}
         </div>
-    </div>
+    </article>
 }
 
 export default AddOnItem

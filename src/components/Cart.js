@@ -1,29 +1,45 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { CartInfoContext } from "../providers/CartInfoProvider";
 import { Link } from 'react-router-dom';
+import { FaShoppingCart } from 'react-icons/fa';
 import dummyData from '../data/dummyData.json';
 import meatShops from '../data/Meat-Shops.json';
 import MeatItemModal from './MeatItemModal';
+import DisplayOrderPriceSum from './DisplayOrderPriceSum';
+import DisplayAddOnProduct from './DisplayAddOnProduct';
 
+// will display the cart icon and the cart modal
 const Cart = () => {
-    const { _confirmedOrdersInfo, _updateCartInfo } = useContext(CartInfoContext);
+    const { _confirmedOrdersInfo } = useContext(CartInfoContext);
 
-    const [confirmedOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
-    const [updateCartInfo, setUpdateCartInfo] = _updateCartInfo
+    const [cartOrdersInfo, setConfirmedOrdersInfo] = _confirmedOrdersInfo;
 
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
-
+    // will store the props for the meat item modal 
     const [propsForMeatItemModal, setPropsForMeatItemModal] = useState({
         ordrId: 0,
         meatItemId: "",
         restaurant: "",
-        addOns: []
     });
 
-    useEffect(() => {
-        console.log(confirmedOrdersInfo);
-    }, [confirmedOrdersInfo]);
+    // will store all of the price of the meat items and addOns
+    let meatItemPrices = [];
+    let addOnPrices = [];
+
+    // will check if the following lists are empty or not
+    const areCartOrdersPresent = cartOrdersInfo.length !== 0;
+    const areAddOnsPricesPresent = addOnPrices.length !== 0;
+    const areMeatItemPricesPresent = meatItemPrices.length !== 0;
+
+    // will compute the total quantity sum of the cart
+    // will check if there is anything in the cart
+    // if there is something in the cart, then it will compute the total quantity of the cart
+    // if not, it will return a zero. 
+    const cartItemQuantityTotal = areCartOrdersPresent ? cartOrdersInfo.map((order) => order.quantity).reduce((numA, numB) => numA + numB) : 0;
+
+    // stores all of the info pertaining to the restaurant of the orders in the cart
+    const restaurantInfo = areCartOrdersPresent && meatShops.find((restaurant) => restaurant.name === cartOrdersInfo[0].restaurant);
 
     const closeMeatItemModal = () => {
         setIsMeatItemModalOpen(false);
@@ -31,66 +47,28 @@ const Cart = () => {
 
     const cartToggle = () => {
         setIsCartOpen(!isCartOpen);
-    }
+    };
 
-    // gets the data from the local storage and puts them into confirmedOrdersInfo
-    useEffect(() => {
-        const savedOrders = localStorage.getItem("confirmed orders");
-        if (savedOrders) {
-            const parsedSavedOrders = JSON.parse(savedOrders);
-            setConfirmedOrdersInfo(parsedSavedOrders);
-        } else {
-            // console.log("confirmedOrdersInfo set");
-            setConfirmedOrdersInfo([...dummyData]);
-        };
-    }, []);
-
-
-
-    // this will save the orders into the local storage everytime the cart gets updated 
-    useEffect(() => {
-        // console.log(confirmedOrdersInfo);
-        const dummyOrdersString = JSON.stringify(confirmedOrdersInfo);
-        localStorage.setItem("confirmed orders", dummyOrdersString);
-        // console.log("orders saved");
-    }, [confirmedOrdersInfo]);
-
-    // will compute the total quantity sum of the cart
-    // will check if there is anything in the cart
-    // if there is something in the cart, then it will compute the total quantity of the cart
-    // if not, it will return a zero. 
-    const cartQuantityTotal = confirmedOrdersInfo.length !== 0 ? confirmedOrdersInfo.map((order) => order.quantity).reduce((numA, numB) => numA + numB) : 0;
-
-
-    // stores the meat list of the restaurant where all of the orders come from
-    // WHAT IS HAPPENING: when there is nothing in the confirmedOrdersInfo state value, then don't do anything
-    const restaurantInfo = confirmedOrdersInfo.length !== 0 && meatShops.find((restaurant) => restaurant.name === confirmedOrdersInfo[0].restaurant);
-    // useEffect(() => {
-    //     console.log(restaurantInfo);
-    // })
-
+    // opens the meat item modal and gets the cart order that was selected
     const openMeatItemModal = (cartOrder) => () => {
         setPropsForMeatItemModal(
             cartOrder
         );
         setIsMeatItemModalOpen(true);
-    }
-
-    // compute the sum of the add-ons and the meat item price
-    let meatItemPrices = [];
-    let addOnPrices = [];
+    };
 
 
-    restaurantInfo !== undefined && confirmedOrdersInfo.forEach((order) => {
+    // if there are any values in restaurantInfo, then get the prices of the meat items and push them into meatItemPrices
+    restaurantInfo && cartOrdersInfo.forEach((order) => {
         restaurantInfo.main_meats.forEach((meat) => {
             if (order.meatItemId === meat.id) {
                 meatItemPrices.push(meat.price * order.quantity);
-            }
-        })
+            };
+        });
     });
 
-
-    restaurantInfo !== undefined && confirmedOrdersInfo.forEach((order) => {
+    // will get the prices of the add-ons and push them into the 'addOnPrices'
+    restaurantInfo && cartOrdersInfo.forEach((order) => {
         if (order.addOns) {
             order.addOns.forEach((addOnId) => {
                 restaurantInfo.add_ons.forEach((addOn) => {
@@ -102,97 +80,73 @@ const Cart = () => {
         };
     })
 
-    const totalAddOnsPrice = addOnPrices.length !== 0 ? addOnPrices.reduce((numA, numB) => numA + numB) : 0;
 
-    const totalMeatItemsPrice = meatItemPrices.length !== 0 ? meatItemPrices.reduce((numA, numB) => numA + numB) : 0;
-
-    const cartTotalPrice = totalMeatItemsPrice + totalAddOnsPrice;
+    const totalAddOnsPrice = areAddOnsPricesPresent ? addOnPrices.reduce((numA, numB) => numA + numB) : 0;
 
 
-    // create a function that will display the total sum of the add-ons of an order
-    const DisplayAddOnProduct = ({ order, restaurantInfo }) => {
-        const AddOnPrices = [];
-        order.addOns.map((addOnId) => restaurantInfo.add_ons.map((addOn) => addOn.id === addOnId && AddOnPrices.push(addOn.price)));
-
-        const AddOnsSum = AddOnPrices.reduce((numA, numB) => numA + numB);
-        const AddOnProduct = (AddOnsSum * order.quantity)
-        return <p>${AddOnProduct.toFixed(2)}</p>
-    };
-
-    // this will display the total sum of the order
-    // DEBUG NOTES:
-    // the 'cartOrder' parameter is not the updated one
-    const DisplayOrderPriceSum = ({ cartOrder, restaurantInfo }) => {
-        let orderPriceList = []
-        let meatItemPriceSum;
-        let addOnPriceList = [];
-
-        // compute the product between the meat item and the quantity of the order
-        restaurantInfo.main_meats.map((meat) => {
-            if (meat.id === cartOrder.meatItemId) {
-                meatItemPriceSum = (cartOrder.quantity * meat.price);
-                orderPriceList.push(meatItemPriceSum);
-            };
-        });
-
-        // compute the product between the addOn
-        cartOrder.addOns && cartOrder.addOns.map((addOnId) => {
-            restaurantInfo.add_ons.map((addOn) => {
-                if (addOn.id === addOnId) {
-                    addOnPriceList.push(addOn.price);
-                }
-            })
-        })
-
-        const addOnsSum = addOnPriceList.length !== 0 && addOnPriceList.reduce((numA, numB) => numA + numB);
-
-        addOnsSum > 0 && orderPriceList.push(addOnsSum * cartOrder.quantity);
-
-        const totalOrderPrice = orderPriceList.reduce((numA, numB) => numA + numB);
-        // debugger
-        return <div>
-            <p>${totalOrderPrice.toFixed(2)}</p>
-        </div>
-    }
+    const totalMeatItemsPrice = areMeatItemPricesPresent ? meatItemPrices.reduce((numA, numB) => numA + numB) : 0;
 
 
+    const cartTotalPrice = (totalMeatItemsPrice + totalAddOnsPrice).toFixed(2);
+
+    // 'meatItemInfo' prop for 'MeatItemModal'
+    const meatItemInfo = restaurantInfo && restaurantInfo.main_meats.find((meat) => meat.id === propsForMeatItemModal.meatItemId)
+
+    // gets the data from the local storage and puts them into confirmedOrdersInfo
+    useEffect(() => {
+        const savedOrders = localStorage.getItem("confirmed orders");
+        if (savedOrders) {
+            const parsedSavedOrders = JSON.parse(savedOrders);
+            setConfirmedOrdersInfo(parsedSavedOrders);
+        } else {
+            setConfirmedOrdersInfo([...dummyData]);
+        };
+    }, []);
+
+
+    // this will save the orders into the local storage everytime the cart gets updated 
+    useEffect(() => {
+        const cartOrders = JSON.stringify(cartOrdersInfo);
+        localStorage.setItem("confirmed orders", cartOrders);
+    }, [cartOrdersInfo]);
 
     return <>
         <div id="cart" onClick={cartToggle}>
             <div className="cart-icon">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <FaShoppingCart />
             </div>
             <div id="cart-text">
                 Cart:
             </div>
             <div className="number-of-items">
-                {cartQuantityTotal}
+                {cartItemQuantityTotal}
             </div>
         </div>
         {/* cart modal */}
         {isCartOpen &&
             <div className="cart-modal">
                 <div className="your-order-container" >
-                    {confirmedOrdersInfo.length !== 0 ? <h1>{confirmedOrdersInfo[0].restaurant}</h1> : <h1>Cart Empty</h1>}
+                    {areCartOrdersPresent ? <h1>{restaurantInfo.name}</h1> : <h1>Cart Empty</h1>}
                 </div>
-                {
-                    /* order is each order in 'dummyData'  */
-                    confirmedOrdersInfo.map((order) => {
-                        return <>
-                            <article className="order-name-edit-button-quantity-container" onClick={openMeatItemModal(order)}>
-                                <div className="edit-button">
-                                    EDIT
-                                    </div>
-                                <div className="quantity-container">
-                                    {order.quantity} X
+                {areCartOrdersPresent && cartOrdersInfo.map((order) => {
+                    return <>
+                        <article className="order-name-edit-button-quantity-container" onClick={openMeatItemModal(order)}>
+                            <div className="edit-button">
+                                EDIT
+                            </div>
+                            <div className="quantity-container">
+                                {order.quantity} X
+                            </div>
+                            {restaurantInfo.main_meats.map((meat) => meat.id === order.meatItemId &&
+                                <div className="name-of-order">
+                                    <h4>{meat.name}</h4>
                                 </div>
-                                {restaurantInfo.main_meats.map((meat) => meat.id === order.meatItemId && <div className="name-of-order"><h4>{meat.name}</h4>
-                                </div>
-                                )}
-                                <div className="price-of-item" >
-                                    <DisplayOrderPriceSum cartOrder={order} restaurantInfo={restaurantInfo} />
-                                </div>
-                                {order.addOns !== undefined && <article className="addOn-container">
+                            )}
+                            <div className="price-of-item" >
+                                {<DisplayOrderPriceSum cartOrder={order} restaurantInfo={restaurantInfo} />}
+                            </div>
+                            {order.addOns &&
+                                <article className="addOn-container">
                                     <article className="addOn-header-container">
                                         <div className="addOn-title">
                                             <h5>ADD-ONS</h5>
@@ -205,29 +159,28 @@ const Cart = () => {
                                         {order.addOns.map((addOnId) => restaurantInfo.add_ons.map((addOn) => addOnId === addOn.id && <p>+{addOn.name}</p>))}
                                     </article>
                                 </article>}
-                            </article>
-                        </>
-                    })
-                }
+                        </article>
+                    </>
+                })}
                 <div className="proceed-to-checkout-button-container">
-                    {confirmedOrdersInfo.length !== 0 && <Link>
-                        <div className="checkout-button">
-                            <div className="checkout-button-text">
-                                Go to checkout
+                    {areCartOrdersPresent &&
+                        <Link>
+                            <div className="checkout-button">
+                                <div className="checkout-button-text">
+                                    Go to checkout
                                     </div>
-                            <div className="total-price">
-                                <p>${cartTotalPrice.toFixed(2)}</p>
+                                <div className="total-price">
+                                    <p>${cartTotalPrice}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>}
+                        </Link>}
                 </div>
-            </div>
-        }
+            </div>}
         {isMeatItemModalOpen &&
             <>
                 <div className="blocker" onClick={closeMeatItemModal} />
                 <MeatItemModal
-                    meatItemInfo={restaurantInfo.main_meats.find((meat) => meat.id === propsForMeatItemModal.meatItemId)}
+                    meatItemInfo={meatItemInfo}
                     restaurantName={propsForMeatItemModal.restaurant}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
                     setIsCartOpen={setIsCartOpen}
@@ -235,8 +188,7 @@ const Cart = () => {
                     isMeatModalOpenWithCartInfo
                     isCartButtonsOnModal
                 />
-            </>
-        }
+            </>}
     </>
 }
 
