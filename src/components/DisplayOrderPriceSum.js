@@ -1,12 +1,10 @@
 import React from 'react'
 
-// NOTES:
-// 1. compute the sum of the add-on prices
-// 2. compute the product between the 1 and the quantity of the cartOrder
+
 
 // this will display the total sum of each order in the cart
 const DisplayOrderPriceSum = ({ cartOrder, restaurantInfo }) => {
-    const orderPrices = []
+    const orderPrices = [];
     const addOnPrices = [];
     let meatItemPriceSum;
 

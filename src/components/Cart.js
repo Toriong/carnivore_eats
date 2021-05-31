@@ -27,10 +27,8 @@ const Cart = () => {
     let meatItemPrices = [];
     let addOnPrices = [];
 
-    // will check if the following lists are empty or not
+
     const areCartOrdersPresent = cartOrdersInfo.length !== 0;
-    const areAddOnsPricesPresent = addOnPrices.length !== 0;
-    const areMeatItemPricesPresent = meatItemPrices.length !== 0;
 
     // will compute the total quantity sum of the cart
     // will check if there is anything in the cart
@@ -80,16 +78,18 @@ const Cart = () => {
         };
     })
 
-
+    const areAddOnsPricesPresent = addOnPrices.length !== 0;
     const totalAddOnsPrice = areAddOnsPricesPresent ? addOnPrices.reduce((numA, numB) => numA + numB) : 0;
 
 
+    const areMeatItemPricesPresent = meatItemPrices.length !== 0;
     const totalMeatItemsPrice = areMeatItemPricesPresent ? meatItemPrices.reduce((numA, numB) => numA + numB) : 0;
 
 
     const cartTotalPrice = (totalMeatItemsPrice + totalAddOnsPrice).toFixed(2);
 
     // 'meatItemInfo' prop for 'MeatItemModal'
+    // 'meatItemInfo' will store all of the info pertaining to the selected meat item
     const meatItemInfo = restaurantInfo && restaurantInfo.main_meats.find((meat) => meat.id === propsForMeatItemModal.meatItemId)
 
     // gets the data from the local storage and puts them into confirmedOrdersInfo
