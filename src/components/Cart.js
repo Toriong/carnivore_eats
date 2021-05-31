@@ -34,7 +34,7 @@ const Cart = () => {
     // will check if there is anything in the cart
     // if there is something in the cart, then it will compute the total quantity of the cart
     // if not, it will return a zero. 
-    const cartItemQuantityTotal = areCartOrdersPresent ? cartOrdersInfo.map((order) => order.quantity).reduce((numA, numB) => numA + numB) : 0;
+    const cartItemsQuantityTotal = areCartOrdersPresent ? cartOrdersInfo.map((order) => order.quantity).reduce((numA, numB) => numA + numB) : 0;
 
     // stores all of the info pertaining to the restaurant of the orders in the cart
     const restaurantInfo = areCartOrdersPresent && meatShops.find((restaurant) => restaurant.name === cartOrdersInfo[0].restaurant);
@@ -119,7 +119,7 @@ const Cart = () => {
                 Cart:
             </div>
             <div className="number-of-items">
-                {cartItemQuantityTotal}
+                {cartItemsQuantityTotal}
             </div>
         </div>
         {/* cart modal */}
