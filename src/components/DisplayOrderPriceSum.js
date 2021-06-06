@@ -1,45 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import getPriceOfAddOn from '../functions/getPriceOfAddOn';
+
 
 
 
 // this will display the total sum of each order in the cart
+// cartOrder: each order in the user's cart
+// restaurantInfo: all of the info pertaining to the restaurant of the user's order
 const DisplayOrderPriceSum = ({ cartOrder, restaurantInfo }) => {
-    const orderPrices = [];
-    const addOnPrices = [];
-    let meatItemPriceSum;
 
-    // compute the product between the meat item and the quantity of the order
-    // will find the price of meat item in 'restaurantInfo' and times it by the quantity of the order
-    restaurantInfo.main_meats.forEach((meat) => {
-        if (meat.id === cartOrder.meatItemId) {
-            meatItemPriceSum = (cartOrder.quantity * meat.price);
-            orderPrices.push(meatItemPriceSum);
-        };
-    });
+    const meatItemInfo = restaurantInfo.main_meats.find(meatItem => meatItem.id === cartOrder.meatItemId);
 
-    // will first check if there are any add-ons in the order
-    // if there are, then get their prices in 'restaurantInfo' and push them into 'addOnPriceList'
-    cartOrder.addOns && cartOrder.addOns.forEach((addOnId) => {
-        restaurantInfo.add_ons.forEach((addOn) => {
-            if (addOn.id === addOnId) {
-                addOnPrices.push(addOn.price);
-            }
-        })
-    });
+    const totalMeatPriceOfOrder = meatItemInfo.price * cartOrder.quantity;
 
-    // store the sum of the addOns here
-    // will check first if there are any add-ons presents in the order
-    const areAddOnsPricesPresent = addOnPrices.length !== 0;
-    const addOnsSum = areAddOnsPricesPresent && addOnPrices.reduce((numA, numB) => numA + numB);
+    // addOn prices will hold all of the prices of the add-ons that the user seleected
+    // have to map through the restaurant.add_ons, becasue the user might have selected multiple add-ons in their order
+    // if there exist addOns in the user's order, then get their prices. if there are no add-ons, then return a zero to avoid returning a undefined value
+    // the zero is used as a placeholder when the computations occurs for the addOnsSum var when the user has no add-ons in their order
+    const proxyForAddOnComputations = 0
+    const addOnPrices = restaurantInfo.add_ons.map((addOn) => cartOrder.addOns ? getPriceOfAddOn(addOn, cartOrder) : proxyForAddOnComputations);
 
-    areAddOnsPricesPresent && orderPrices.push(addOnsSum * cartOrder.quantity);
+    // have to make a conditional if there weren't any add-ons 
+    const addOnsSum = addOnPrices.reduce((addOnA, addOnB) => addOnA + addOnB);
 
-    // will store the total price of each order in confirmedOrdersInfo
-    const totalOrderPrice = orderPrices.reduce((numA, numB) => numA + numB).toFixed(2);
+    // stores the total price of the add-ons for the user's order
+    const totalAddOnsPriceOfOrder = (addOnsSum * cartOrder.quantity);
+
+    const cartTotalPrice = (totalMeatPriceOfOrder + totalAddOnsPriceOfOrder).toFixed(2);
 
     return <div>
-        <p>${totalOrderPrice}</p>
+        <p>${cartTotalPrice}</p>
     </div>
 };
 
 export default DisplayOrderPriceSum;
+
+
+
+
+
+

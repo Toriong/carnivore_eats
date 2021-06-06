@@ -6,7 +6,7 @@ import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 
 
 // will list all of the add-ons of the selected restaurant
-const AddOnItem = ({ addOnItem, orderFromCart, setOrderFromCart }) => {
+const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed }) => {
 
     const [boxClicked, setBoxClicked] = useState(false);
 
@@ -14,29 +14,33 @@ const AddOnItem = ({ addOnItem, orderFromCart, setOrderFromCart }) => {
     const addAddOnToOrder = () => {
         // check if there is an existing add-on in the orderFromCart object, if there is then use the spread operator to add another add-on to the existing list
         const newAddOn = addOnItem.id
-        const updatedAddOnList = orderFromCart.addOns ? [...orderFromCart.addOns, newAddOn] : [newAddOn]
-        setOrderFromCart({
-            ...orderFromCart,
-            addOns: updatedAddOnList
+        // if there are no addOn in the c
+        const addOnList = order.addOns ? [...order.addOns, newAddOn] : [newAddOn]
+        setOrder({
+            ...order,
+            addOns: addOnList
         });
         setBoxClicked(!boxClicked);
+        // when true, it will updated the total price of the order within the MeatItemModal component
+        setWasAddOnOrCountBtnPressed(true);
     };
 
     // deletes an addOn from user's order
     const deleteAddOnFromOrder = () => {
         const deleteThisAddOn = addOnItem.id
-        const updatedAddOnList = orderFromCart.addOns.filter((addOnId) => addOnId !== deleteThisAddOn)
-        setOrderFromCart({
-            ...orderFromCart,
+        const updatedAddOnList = order.addOns.filter((addOnId) => addOnId !== deleteThisAddOn)
+        setOrder({
+            ...order,
             addOns: updatedAddOnList
         });
         setBoxClicked(!boxClicked);
+        setWasAddOnOrCountBtnPressed(true);
     };
 
     // check off the addOn box on the initial render of the component if there are any addOns
     useEffect(() => {
-        if (orderFromCart.addOns) {
-            orderFromCart.addOns.forEach((addOnId) => {
+        if (order.addOns) {
+            order.addOns.forEach((addOnId) => {
                 if (addOnId === addOnItem.id) {
                     setBoxClicked(true);
                 };
