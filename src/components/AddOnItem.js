@@ -5,7 +5,7 @@ import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 
 
 
-// will list all of the add-ons of the selected restaurant
+// will list all of the add-ons of the selected restaurant when a meat item is selected from the menu component or when a cart order is clicked from the cart modal
 const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed }) => {
 
     const [boxClicked, setBoxClicked] = useState(false);
@@ -38,14 +38,15 @@ const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed })
     };
 
     // check off the addOn box on the initial render of the component if there are any addOns
+    // did this to show to the user what add-ons are part of their order when the meat item modal is presented onto the UI
     useEffect(() => {
         if (order.addOns) {
             order.addOns.forEach((addOnId) => {
                 if (addOnId === addOnItem.id) {
                     setBoxClicked(true);
                 };
-            })
-        }
+            });
+        };
     }, []);
 
 

@@ -30,8 +30,8 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
     // if true, will compute the total price of the order in the meatItemModal
     const [wasAddOnOrCountBtnPressed, setWasAddOnOrCountBtnPressed] = useState(false);
 
-    // will store the info that will be edited by the user (having the quantity of the order be changed or an add-on keyName inserted in)
-    const [meatOrder, setMeatOrder] = useState(orderInfo);
+    // will store the info that will be edited by the user (having the quantity of the order be changed or an add-on keyName inserted into the order)
+    const [orderInfo_, setOrderInfo_] = useState(orderInfo);
 
     // will store all of the info pertaining to the restaurant of the selected meatItem
     const restaurantInfo = meatShops.find((restaurant) => restaurant.name === orderInfo.restaurant);
@@ -42,6 +42,7 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
 
     const decreaseCount = () => {
         setOrderCount(orderCount - 1);
+        // set the state value to true in order to update the total price of the user's order
         setWasAddOnOrCountBtnPressed(true);
     };
 
@@ -55,25 +56,26 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
         // will find the order that is needed to be deleted by way of its id
         setCartOrdersInfo(cartOrdersInfo.filter((order) => order.orderId !== orderInfo.orderId));
         setIsMeatItemModalOpen(false);
-        // will close the cart modal so that the user can enter in a new order from the menu of the restaurant
+        // will close the cart modal assuming that the user wants to access the menu of a restaurant after deleting the order from their cart
         setIsCartOpen(false);
     };
 
     // will respond to the user pressing the update button
     const updateOrder = () => {
         // will check if there are any add-ons in the order
-        if (meatOrder.addOns) {
+        if (orderInfo_.addOns) {
             // will check if the array that is in the addOns key of the order is empty
-            const noAddOnsArePresent = meatOrder.addOns.length === 0;
+            const noAddOnsArePresent = orderInfo_.addOns.length === 0;
             if (noAddOnsArePresent) {
-                setMeatOrder(delete meatOrder.addOns);
+                setOrderInfo_(delete orderInfo_.addOns);
             };
         };
         // will update the selected order via its ID 
         const updatedOrder = cartOrdersInfo.map((order) => {
-            if (order.orderId === meatOrder.orderId) {
+            if (order.orderId === orderInfo_.orderId) {
                 return {
-                    ...meatOrder,
+                    // using the spread operator will also inlcude any of the add-ons that the user may have
+                    ...orderInfo_,
                     quantity: orderCount
                 }
             }
@@ -86,11 +88,15 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
 
 
     // must be available in the following useEffects below
-    let addOnsSum = 0;
+    // used 'var' so 'addOnsSum' can be accessed globally
+    // used var in order to store the sum of the addOns if there any in the user's order
+    // if no add-ons, default value will be zero in order to act as a placeholder when computing the total price of the user's order in 'cartOrderPriceTotal'
+    var addOnsSum = 0;
 
     // will check if there exist an addOn key in the meatOrder state value
-    if (meatOrder.addOns) {
-        const addOnsPrices = restaurantInfo.add_ons.map((addOn) => getPriceOfAddOn(addOn, meatOrder));
+    if (orderInfo_.addOns) {
+        // will get the addOn prices of the add-ons that the user selected
+        const addOnsPrices = restaurantInfo.add_ons.map((addOnInfo) => getPriceOfAddOn(addOnInfo, orderInfo_));
         addOnsSum = addOnsPrices.reduce((numA, numB) => numA + numB)
     };
 
@@ -103,21 +109,23 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
     }, [orderCount]);
 
     // there will be multiple re-renders of the component when the user increases the quantity count (the component will re-render when the orderCount is changed and when orderPriceTotal changes as well)
-    // this useEffect will update the total price of the order when the user clicks on the quantity button or the add-on button
+    // useEffect will run when the quantity button or the add-on button has been pressed
     useEffect(() => {
         if (wasAddOnOrCountBtnPressed) {
             const cartOrderPriceTotal = (meatItemInfo.price + addOnsSum) * orderCount;
-            // chose this way because the price of the order kept on being reseted back to the default price of the meat item (with one count) on the initial render of this component without a conditional (without the condtional--wasAddOnOrCountBtnPressed--the orderPriceTotal will set to the intital price of the meat item (the price of the meat item times the default value stored in order count, which is 1))
+            // without the conditional, 'orderCount' will be reseted back to its default (1)
+            // poses a problem when I open a cart order in the MeatItemModal
             setOrderPriceTotal(cartOrderPriceTotal.toFixed(2));
             setWasAddOnOrCountBtnPressed(false);
         };
-    }, [wasAddOnOrCountBtnPressed, meatOrder, addOnsSum, meatItemInfo.price, orderCount]);
+    }, [wasAddOnOrCountBtnPressed, orderInfo_, addOnsSum, meatItemInfo.price, orderCount]);
 
     // will present the cart order info onto the modal on the initial render of this component when the component was invoked from the Cart component
     useEffect(() => {
+        // provided a conditional since I want the info on the meat item modal to display all of the cart info only if the user clicked on a cart order 
         if (isMeatModalOpenWithCartInfo) {
-            const cartOrderPriceTotal = (meatItemInfo.price + addOnsSum) * meatOrder.quantity;
-            setOrderCount(meatOrder.quantity);
+            const cartOrderPriceTotal = (meatItemInfo.price + addOnsSum) * orderInfo_.quantity;
+            setOrderCount(orderInfo_.quantity);
             setOrderPriceTotal(cartOrderPriceTotal.toFixed(2));
             // assuming that the user might have the intent to update his order with add-ons, the add-on menu will be displayed as a result 
             setIsAddOnMenuOpen(true);
@@ -147,8 +155,9 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
                         {restaurantInfo.add_ons.map((addOnItem) => {
                             return <AddOnItem
                                 addOnItem={addOnItem}
-                                order={meatOrder}
-                                setOrder={setMeatOrder}
+                                order={orderInfo_}
+                                setOrder={setOrderInfo_}
+                                // if the user clicked on an add-on button, it will set 'wasAddOnOrCountBtnPressed' in order to update the total price of the user's order. 
                                 setWasAddOnOrCountBtnPressed={setWasAddOnOrCountBtnPressed}
                             />
                         })}
@@ -210,13 +219,14 @@ const MeatItemModal = ({ meatItemInfo, setIsMeatItemModalOpen, orderInfo, isMeat
                         }
                     </div>
                     :
+                    /* if isCartButtonsOnModal is false or undefined, then present the 'Add to cart' button   */
                     <div className="add-to-cart-button">
                         <div>
                             Add
                         </div>
                         <div className="count">{orderCount}</div>
                         <div>
-                            to order
+                            to cart
                         </div>
                         {orderPriceTotal > meatItemInfo.price ?
                             <div>

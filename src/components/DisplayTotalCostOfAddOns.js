@@ -4,7 +4,7 @@ import getPriceOfAddOn from '../functions/getPriceOfAddOn'
 // will display the total price of the addOns for an order that has addOns in the cart modal
 const DisplayTotalCostOfAddOns = ({ cartOrder, restaurantInfo }) => {
 
-    // will hold all of the add-on info objects of the add-ons that the user selected
+    // an array of all of the prices of the add-ons that the user selected for each order
     const addOnPrices = restaurantInfo.add_ons.map((addOn) => getPriceOfAddOn(addOn, cartOrder));
 
     const addOnsSum = addOnPrices.reduce((numA, numB) => numA + numB);
