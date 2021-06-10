@@ -1,14 +1,13 @@
-[
+{   "restaurant": "Mcdonalds",
+    "orders":[
     {
         "orderId": 1,
         "meatItemId": "A1",
-        "restaurant": "Mcdonalds",
         "quantity": 3
     },
     {
         "orderId": 2,
         "meatItemId": "A1",
-        "restaurant": "Mcdonalds",
         "quantity": 5,
         "addOns": [
           "AA2"
@@ -17,16 +16,14 @@
     {
         "orderId": 3,
         "meatItemId": "A3",
-        "restaurant": "Mcdonalds",
         "quantity": 10
     },
     {
         "orderId": 4,
         "meatItemId": "A2",
-        "restaurant": "Mcdonalds",
         "quantity": 5,
         "addOns": [
             "AA1", "AA2"
         ]
     }
-]
+]}
