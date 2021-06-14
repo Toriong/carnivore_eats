@@ -14,16 +14,16 @@ import DisplayAddOnName from './DisplayAddOnName'
 
 // will display the cart icon and the cart modal
 const Cart = () => {
-    const { _cartOrdersInfo } = useContext(CartInfoContext);
-    const [cartOrdersInfo, setCartOrdersInfo] = _cartOrdersInfo;
+    const { _cartOrders } = useContext(CartInfoContext);
+    const [cartOrders, setCartOrders] = _cartOrders;
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
-    const [propsForMeatItemModal, setPropsForMeatItemModal] = useState({});
-    const cartIsNotEmpty = cartOrdersInfo.orders.length !== 0;
-    let cartTotalQuantity = 0;
+    const [selectedCartOrder, setSelectedCartOrder] = useState({});
+    const cartIsNotEmpty = !!cartOrders.orders.length;
+    let totalOrders = 0;
     let cartTotalPrice = 0;
     let restaurant;
-    let meatItemInfo;
+    let meatItem;
 
     const closeMeatItemModal = () => {
         setIsMeatItemModalOpen(false);
@@ -35,36 +35,36 @@ const Cart = () => {
 
 
     const openMeatItemModal = (cartOrder) => () => {
-        setPropsForMeatItemModal(cartOrder);
+        setSelectedCartOrder(cartOrder);
         setIsMeatItemModalOpen(true);
     };
 
 
     // cart computations
-    if (cartIsNotEmpty) {
-        restaurant = meatShops.find((shop) => shop.name === cartOrdersInfo.restaurant);
+    if (cartOrders.orders.length) {
+        restaurant = meatShops.find((shop) => shop.name === cartOrders.restaurant);
 
-        cartTotalQuantity = cartOrdersInfo.orders.reduce((quantityAccumulator, order) => quantityAccumulator + order.quantity, 0);
+        totalOrders = cartOrders.orders.reduce((totalOrders_, order) => totalOrders_ + order.quantity, 0);
 
-        cartTotalPrice = cartOrdersInfo.orders.reduce((cartPriceAccumulator, order) => {
+        cartTotalPrice = cartOrders.orders.reduce((cartTotalPrice_, order) => {
             const meatItem = restaurant.main_meats.find((meat) => meat.id === order.meatItemId);
             const totalMeatItemPrice = order.quantity * meatItem.price;
 
             let addOnsTotalPrice = 0
             if (order.addOns) {
-                addOnsTotalPrice = order.addOns.reduce((addOnPriceAccumulator, addOnId) => {
+                addOnsTotalPrice = order.addOns.reduce((addOnTotalPrice_, addOnId) => {
                     const addOn = restaurant.add_ons.find((addOn) => addOn.id === addOnId);
-                    return addOnPriceAccumulator + (addOn.price * order.quantity);
+                    return addOnTotalPrice_ + (addOn.price * order.quantity);
                 }, 0)
             }
 
-            return cartPriceAccumulator + (totalMeatItemPrice + addOnsTotalPrice);
-        }, 0)
+            return cartTotalPrice_ + (totalMeatItemPrice + addOnsTotalPrice);
+        }, 0);
     }
 
     if (isMeatItemModalOpen) {
-        // props for MeatItemModal
-        meatItemInfo = restaurant.main_meats.find((meat) => meat.id === propsForMeatItemModal.meatItemId);
+        // 'meatItem' prop for the meatItemModal component
+        meatItem = restaurant.main_meats.find((meat) => meat.id === selectedCartOrder.meatItemId);
     }
 
     // put orders onto UI
@@ -72,18 +72,18 @@ const Cart = () => {
         const savedOrders = localStorage.getItem("confirmed orders");
         if (savedOrders) {
             const parsedSavedOrders = JSON.parse(savedOrders);
-            setCartOrdersInfo(parsedSavedOrders);
+            setCartOrders(parsedSavedOrders);
         } else {
-            setCartOrdersInfo(dummyData);
+            setCartOrders(dummyData);
         };
     }, []);
 
 
     // save orders 
     useEffect(() => {
-        const cartOrders = JSON.stringify(cartOrdersInfo);
-        localStorage.setItem("confirmed orders", cartOrders);
-    }, [cartOrdersInfo]);
+        const cartOrders_ = JSON.stringify(cartOrders);
+        localStorage.setItem("confirmed orders", cartOrders_);
+    }, [cartOrders]);
 
     return <>
         <article id="cart" onClick={cartToggle}>
@@ -94,7 +94,7 @@ const Cart = () => {
                 Cart:
             </div>
             <div className="number-of-items">
-                {cartTotalQuantity}
+                {totalOrders}
             </div>
         </article>
         {/* cart modal */}
@@ -103,7 +103,7 @@ const Cart = () => {
                 <div className="your-order-container" >
                     {cartIsNotEmpty ? <h1>{restaurant.name}</h1> : <h1>Cart is empty</h1>}
                 </div>
-                {cartIsNotEmpty && cartOrdersInfo.orders.map((order) => {
+                {cartIsNotEmpty && cartOrders.orders.map((order) => {
                     return <>
                         <article className="order-name-edit-button-quantity-container" onClick={openMeatItemModal(order)}>
                             <div className="edit-button">
@@ -112,7 +112,6 @@ const Cart = () => {
                             <div className="quantity-container">
                                 {order.quantity} X
                             </div>
-                            {/* display the name of the meat item of the user's cart order */}
                             {restaurant.main_meats.map((meat) => meat.id === order.meatItemId &&
                                 <div className="name-of-order">
                                     <h4>{meat.name}</h4>
@@ -121,7 +120,6 @@ const Cart = () => {
                             <div className="price-of-item" >
                                 <DisplayOrderPriceSum cartOrder={order} restaurant={restaurant} />
                             </div>
-                            {/* if add-ons are present, then display their names and the total cost of the add-ons */}
                             {order.addOns &&
                                 <article className="addOn-container">
                                     <article className="addOn-header-container">
@@ -133,7 +131,7 @@ const Cart = () => {
                                         </div>
                                     </article>
                                     <article className="add-on-names-container">
-                                        <DisplayAddOnName cartOrder={order} restaurantInfo={restaurant} />
+                                        <DisplayAddOnName cartOrder={order} restaurant={restaurant} />
                                     </article>
                                 </article>}
                         </article>
@@ -157,10 +155,10 @@ const Cart = () => {
             <>
                 <div className="blocker" onClick={closeMeatItemModal} />
                 <MeatItemModal
-                    meatItemInfo={meatItemInfo}
+                    meatItem={meatItem}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
                     setIsCartOpen={setIsCartOpen}
-                    orderInfo={propsForMeatItemModal}
+                    selectedOrder={selectedCartOrder}
                     isMeatModalOpenWithCartInfo
                     isCartButtonsOnModal
                 />

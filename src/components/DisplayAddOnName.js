@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
-const DisplayAddOnName = ({ cartOrder, restaurantInfo }) => {
-    const addOnsInfo = restaurantInfo.add_ons.filter(addOn => cartOrder.addOns.includes(addOn.id));
-    const names = addOnsInfo.map((addOn) => <p>+{addOn.name}</p>)
+const DisplayAddOnName = ({ cartOrder, restaurant }) => {
+    const addOns = restaurant.add_ons.filter(addOn => cartOrder.addOns.includes(addOn.id));
+    const names = addOns.map((addOn) => <p>+{addOn.name}</p>)
 
     return <>{names}</>
 }

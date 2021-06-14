@@ -8,12 +8,12 @@ export const CartInfoProvider = (props) => {
     const cartOrdersDefaultValue = {
         orders: []
     }
-    const [cartOrdersInfo, setCartOrdersInfo] = useState(cartOrdersDefaultValue);
-    const [updateCartInfo, setUpdateCartInfo] = useState(false);
+    const [cartOrders, setCartOrders] = useState(cartOrdersDefaultValue);
+    const [updateCart, setUpdateCart] = useState(false);
 
     return <CartInfoContext.Provider value={{
-        _cartOrdersInfo: [cartOrdersInfo, setCartOrdersInfo],
-        _updateCartInfo: [updateCartInfo, setUpdateCartInfo],
+        _cartOrders: [cartOrders, setCartOrders],
+        _updateCartInfo: [updateCart, setUpdateCart],
     }}>
         {props.children}
     </CartInfoContext.Provider>

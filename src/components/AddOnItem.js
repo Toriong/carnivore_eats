@@ -12,23 +12,27 @@ const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed })
 
     // will add an add-on to the user's order
     const addAddOnToOrder = () => {
-        const newAddOn = addOnItem.id
-        const addOnList = order.addOns ? [...order.addOns, newAddOn] : [newAddOn]
+        let addOns;
+        if (order.addOns) {
+            addOns = [...order.addOns, addOnItem.id]
+        } else {
+            addOns = [addOnItem.id]
+        }
         setOrder({
             ...order,
-            addOns: addOnList
+            addOns: addOns
         });
         setBoxClicked(!boxClicked);
+        // compute the total price of order
         setWasAddOnOrCountBtnPressed(true);
     };
 
     // deletes an addOn from user's order
     const deleteAddOnFromOrder = () => {
-        const deleteThisAddOn = addOnItem.id
-        const updatedAddOnList = order.addOns.filter((addOnId) => addOnId !== deleteThisAddOn)
+        const addOns = order.addOns.filter((addOnId) => addOnId !== addOnItem.id)
         setOrder({
             ...order,
-            addOns: updatedAddOnList
+            addOns: addOns
         });
         setBoxClicked(!boxClicked);
         setWasAddOnOrCountBtnPressed(true);
