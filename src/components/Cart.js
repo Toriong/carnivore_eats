@@ -5,9 +5,9 @@ import { FaShoppingCart } from 'react-icons/fa';
 import dummyData from '../data/dummyData.json';
 import meatShops from '../data/Meat-Shops.json';
 import MeatItemModal from './MeatItemModal';
-import DisplayOrderPriceSum from './DisplayOrderPriceSum';
-import DisplayTotalCostOfAddOns from './DisplayTotalCostOfAddOns';
-import DisplayAddOnName from './DisplayAddOnName'
+import OrderPriceSum from './OrderPriceSum';
+import TotalCostOfAddOns from './TotalCostOfAddOns';
+import AddOnNames from './AddOnNames'
 
 
 
@@ -118,7 +118,7 @@ const Cart = () => {
                                 </div>
                             )}
                             <div className="price-of-item" >
-                                <DisplayOrderPriceSum cartOrder={order} restaurant={restaurant} />
+                                <OrderPriceSum cartOrder={order} restaurant={restaurant} />
                             </div>
                             {order.addOns &&
                                 <article className="addOn-container">
@@ -127,11 +127,11 @@ const Cart = () => {
                                             <h5>ADD-ONS</h5>
                                         </div>
                                         <div>
-                                            <DisplayTotalCostOfAddOns cartOrder={order} restaurant={restaurant} />
+                                            <TotalCostOfAddOns cartOrder={order} restaurant={restaurant} />
                                         </div>
                                     </article>
                                     <article className="add-on-names-container">
-                                        <DisplayAddOnName cartOrder={order} restaurant={restaurant} />
+                                        <AddOnNames cartOrder={order} restaurant={restaurant} />
                                     </article>
                                 </article>}
                         </article>

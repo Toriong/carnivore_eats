@@ -10,7 +10,6 @@ const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed })
 
     const [boxClicked, setBoxClicked] = useState(false);
 
-    // will add an add-on to the user's order
     const addAddOnToOrder = () => {
         let addOns;
         if (order.addOns) {
@@ -27,7 +26,6 @@ const AddOnItem = ({ addOnItem, order, setOrder, setWasAddOnOrCountBtnPressed })
         setWasAddOnOrCountBtnPressed(true);
     };
 
-    // deletes an addOn from user's order
     const deleteAddOnFromOrder = () => {
         const addOns = order.addOns.filter((addOnId) => addOnId !== addOnItem.id)
         setOrder({

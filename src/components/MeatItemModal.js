@@ -9,8 +9,8 @@ import '../css/meatItemModal.css'
 
 
 // NOTES:
-// -this is where all of the computations/editing for an order will occur
-// orderInfo will take in the followning object if it was opened from the Restaurant component:
+// -where all of the computations/editing for an order will occur
+// orderInfo will take in the following object if it was opened from the Restaurant component:
 // {
 //  meatItemId: (id of the meat item)
 //  restaurant: (name of restaurant)
@@ -54,9 +54,9 @@ const MeatItemModal = ({ meatItem, setIsMeatItemModalOpen, selectedOrder, isMeat
 
     const updateOrder = () => {
         if (selectedOrder_.addOns) {
-            const noAddOnsArePresent = selectedOrder_.addOns.length === 0;
-            if (noAddOnsArePresent) {
+            if (!(selectedOrder_.addOns.length)) {
                 setSelectedOrder_(delete selectedOrder_.addOns);
+                console.log("deleted selectedOrder_.addOns")
             };
         };
         const updatedCartOrders = cartOrders.orders.map((cartOrder) => {
@@ -79,7 +79,7 @@ const MeatItemModal = ({ meatItem, setIsMeatItemModalOpen, selectedOrder, isMeat
     useEffect(() => {
         if (orderCount === 1) {
             setIsMinusButtonDisabled(true);
-        } else if (orderCount !== 1) {
+        } else if (orderCount > 1) {
             setIsMinusButtonDisabled(false);
         }
     }, [orderCount]);

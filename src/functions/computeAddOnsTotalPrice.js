@@ -5,10 +5,10 @@ const computeAddOnsTotalPrice = (order, restaurant, newOrderQuantity) => {
     addOnsTotalPrice = order.addOns.reduce((addOnsTotalPrice_, addOnId) => {
         const addOn = restaurant.add_ons.find((addOn) => addOn.id === addOnId);
         if (newOrderQuantity) {
-            // the num value stored in changedOrderQuantity can be changeed constantly
+            // the num value stored in changedOrderQuantity can be changed
             return addOnsTotalPrice_ + (addOn.price * newOrderQuantity)
         } else {
-            // order.quantity will be a fixed num value
+            // order.quantity === fixed num value
             return addOnsTotalPrice_ + (addOn.price * order.quantity);
         }
     }, 0);
