@@ -1,14 +1,12 @@
 // use this fn in DisplayOrderPriceSum.js, MeatItemModal.js, Cart.js
 
-const computeAddOnsTotalPrice = (order, restaurant, newOrderQuantity) => {
+const computeAddOnsTotalPrice = (order, restaurant, newQuantity) => {
     let addOnsTotalPrice = 0;
     addOnsTotalPrice = order.addOns.reduce((addOnsTotalPrice_, addOnId) => {
         const addOn = restaurant.add_ons.find((addOn) => addOn.id === addOnId);
-        if (newOrderQuantity) {
-            // the num value stored in changedOrderQuantity can be changed
-            return addOnsTotalPrice_ + (addOn.price * newOrderQuantity)
+        if (newQuantity) {
+            return addOnsTotalPrice_ + (addOn.price * newQuantity)
         } else {
-            // order.quantity === fixed num value
             return addOnsTotalPrice_ + (addOn.price * order.quantity);
         }
     }, 0);

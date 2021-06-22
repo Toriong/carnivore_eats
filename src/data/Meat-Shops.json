@@ -23,7 +23,7 @@
             },
             {
                 "id": "A3",
-                "name": "sausage",
+                "name": "Sausage",
                 "price": 1.59,
                 "image": " ",
                 "alt": "sausage_image"
@@ -32,14 +32,14 @@
         "add_ons":[
             {
                 "id": "AA1",
-                "name": "bacon",
+                "name": "Bacon",
                 "price": 1.40,
                 "image": " ",
                 "alt": "bacon_image"
             },
             {
                 "id": "AA2",
-                "name": "cheese",
+                "name": "Cheese",
                 "options":"american, cheddar, prepper jack",
                 "price": 0.99,
                 "image": " ",
