@@ -9,10 +9,6 @@ import '../css/cart.css';
 
 const NavBar = () => {
 
-    useEffect(() => {
-        console.log("hello world");
-        console.log("testing")
-    })
     return <div className="unfixed-wrapper">
         <div className="navbar">
             <div className="hamburger-menu-container">

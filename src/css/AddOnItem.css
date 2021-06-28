@@ -1,99 +1,33 @@
-/* add-on container */
-.add-ons-container {
-  /* position: absolute; */
-}
-
-.add-ons-text-container {
-  border: solid 2px black;
-  width: 100%;
-  float: left;
-  clear: left;
-}
-
-.add-ons-text-container h2 {
-  float: left;
-}
-
-.add-ons-text-container i {
-  float: right;
-  margin-right: 30px;
-  border: solid black 2px;
-  width: 5%;
+:root {
+  --containerBorderColor: solid gray 0.8px;
 }
 
 .add-ons-list-container {
-  float: left;
   width: 100%;
-  height: fit-content;
-  border: blue solid 2px;
+  padding: 0;
 }
 
 .add-on {
-  border: solid 2px pink;
-  height: fit-content;
-  width: 100%;
+  height: 50px;
+  width: 98%;
+  /* display: flex; */
 }
 
-.add-ons-container {
-  border: solid 2px magenta;
-}
-
-.check-container {
-  /* border: solid 2px grey; */
-}
-
-/* quantity-and-add-to-cart */
-.add-to-cart-button-quantity-button-container {
+.add-on svg {
   float: left;
-  clear: left;
-  width: 100%;
-  height: 100px;
-  border: solid green 2px;
+  margin: 10px 0px 0px 15px;
+  font-size: 20px;
+  border-radius: 3vh;
 }
 
-.add-to-cart-button-quantity-button-container div {
-  display: inline-block;
-  margin: 10px 5px 0px 5px;
+.addOn-price {
+  margin-top: 10px;
+  float: right;
 }
 
-.add-to-cart-button {
-  border: solid 2px black;
-  width: 50%;
-  height: 50px;
-}
-
-.update-order-button {
-  border: solid 2px black;
-  width: 50%;
-  height: 50px;
-}
-
-.add-option-text {
-  border: solid magenta 2px;
-  height: 50px;
-  width: 100%;
-  position: relative;
-}
-
-.add-option-text > div {
-  display: inline-block;
-  margin: 15px 5px 0px 5px;
-  border: solid 2px black;
-}
-
-.remove-item-container {
+.addOn-name {
   float: left;
-  width: 100%;
-  height: 100px;
-  display: grid;
-  place-items: center;
-}
-
-.update-button {
-  border: solid blue 2px;
-}
-
-.plus-sign,
-.minus-sign {
-  /* border: black solid 2px; */
+  margin-left: 10px;
+  margin-top: 10px;
+  font-size: 18px;
 }
