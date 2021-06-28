@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import meatShops from '../data/Meat-Shops.json';
 import AddOnItem from '../components/AddOnItem';
-import computeAddOnsTotalPrice from '../functions/computeAddOnsTotalPrice';
+import getAddOnsInfo from '../functions/getAddOnsInfo';
 import { CartInfoContext } from '../providers/CartInfoProvider';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import '../css/meatItemModal.css'
@@ -69,11 +69,13 @@ const MeatItemModal = ({ meatItem, setIsMeatItemModalOpen, selectedOrder, isMeat
     };
 
     const computeOrderTotalPrice = useCallback((order, newQuantity) => {
-        let addOnsTotalPrice = 0
+        let addOns = {
+            totalPrice: 0
+        };
         let meatItemTotalPrice;
 
         if (order.addOns) {
-            addOnsTotalPrice = computeAddOnsTotalPrice(order, restaurant, newQuantity);
+            addOns = getAddOnsInfo(order, restaurant, newQuantity)
         };
 
         if (newQuantity) {
@@ -82,7 +84,7 @@ const MeatItemModal = ({ meatItem, setIsMeatItemModalOpen, selectedOrder, isMeat
             meatItemTotalPrice = meatItem.price * order.quantity;
         };
 
-        const cartOrderPriceTotal = (meatItemTotalPrice + addOnsTotalPrice).toFixed(2);
+        const cartOrderPriceTotal = (meatItemTotalPrice + addOns.totalPrice).toFixed(2);
 
         setOrderPriceTotal(cartOrderPriceTotal);
     }, [meatItem, restaurant]);
