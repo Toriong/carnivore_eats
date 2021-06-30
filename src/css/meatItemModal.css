@@ -1,0 +1,153 @@
+:root {
+  --containerBackgroundColor: lightgray;
+  --containerBorderColor: solid gray 0.8px;
+  --containerWidth: 80%;
+  --containerHeight: 50%;
+  --containerBorderRadius: 2vh;
+}
+
+.selected-food-modal {
+  /* justify-content: space-evenly; */
+  height: 550px;
+  width: 600px;
+  border: lightgray 0.8px solid;
+  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10000;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/* image of item */
+.picture-container {
+  border-bottom: var(--containerBorderColor);
+  width: 100%;
+  height: 200px;
+  position: relative;
+  z-index: 5000;
+}
+.picature-container img {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+
+/* food title */
+.food-title-container {
+  display: flex;
+  width: 100%;
+  height: 80px;
+}
+
+.food-title-container h1 {
+  margin: 10px 0px 0px 13px;
+  font-size: 25px;
+}
+
+.add-ons-text {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background: rgb(246, 246, 246);
+  border-top: var(--containerBorderColor);
+  border-bottom: var(--containerBorderColor);
+}
+
+.add-ons-text h4 {
+  margin: 10px 0px 0px 20px;
+  font-size: 18px;
+}
+
+.add-ons-text svg {
+  margin: 15px 20px 0 0;
+}
+
+/* quantity-and-add-to-cart */
+.quantity-and-add-to-cart-container {
+  border-top: var(--containerBorderColor);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 20px;
+  background: white;
+}
+
+.quantity-and-add-to-cart-container > * {
+  margin-top: 20px;
+}
+
+.add-to-cart-button {
+  background: black;
+  color: white;
+  width: 300px;
+  height: 50px;
+  display: flex;
+  position: relative;
+  border-style: none;
+}
+
+.add-to-cart-button > * {
+  margin: 0px 5px 0px 5px;
+}
+
+.add-to-cart-button > span {
+  border: black 2px solid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.orderPriceTotal {
+  position: absolute;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.remove-item-button-container {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: var(--containerBorderColor);
+}
+
+.remove-item-button {
+  width: 25%;
+  height: 50%;
+  border-style: none;
+  background: none;
+  color: red;
+  font-size: 18px;
+}
+
+.quantity-count {
+  display: grid;
+  place-items: center;
+}
+
+.quantity-button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.quantity-button-container > * {
+  margin: 0px 10px 0px 10px;
+}
+
+.quantity-button {
+  border-style: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 3vh;
+}

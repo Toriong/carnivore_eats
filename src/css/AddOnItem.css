@@ -1,0 +1,33 @@
+:root {
+  --containerBorderColor: solid gray 0.8px;
+}
+
+.add-ons-list-container {
+  width: 100%;
+  padding: 0;
+}
+
+.add-on {
+  height: 50px;
+  width: 98%;
+  /* display: flex; */
+}
+
+.add-on svg {
+  float: left;
+  margin: 10px 0px 0px 15px;
+  font-size: 20px;
+  border-radius: 3vh;
+}
+
+.addOn-price {
+  margin-top: 10px;
+  float: right;
+}
+
+.addOn-name {
+  float: left;
+  margin-left: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+}

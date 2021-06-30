@@ -1,0 +1,29 @@
+{   "restaurant": "Mcdonalds",
+    "orders":[
+    {
+        "orderId": 1,
+        "meatItemId": "A1",
+        "quantity": 3
+    },
+    {
+        "orderId": 2,
+        "meatItemId": "A1",
+        "quantity": 5,
+        "addOns": [
+          "AA2"
+        ]
+    },
+    {
+        "orderId": 3,
+        "meatItemId": "A3",
+        "quantity": 10
+    },
+    {
+        "orderId": 4,
+        "meatItemId": "A2",
+        "quantity": 5,
+        "addOns": [
+            "AA1", "AA2"
+        ]
+    }
+]}

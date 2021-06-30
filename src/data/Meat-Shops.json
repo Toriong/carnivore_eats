@@ -1,0 +1,309 @@
+ [
+    {
+        "name": "Mcdonalds",
+        "url": "mcdonalds",
+        "image": "/mcdonalds-logo.gif",
+        "alt": "mcdonalds_logo",
+        "main_meats": [
+            {
+                "id": "A1",
+                "name": "Regular Meat (2oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 0.6,
+                "image": " ",
+                "alt": "regular_meat_picture"
+            },
+            {
+                "id": "A2",
+                "name": "Quater Pounder (4oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 1.50,
+                "image": " ",
+                "alt": "quater_pounder_image"
+            },
+            {
+                "id": "A3",
+                "name": "Sausage",
+                "price": 1.59,
+                "image": " ",
+                "alt": "sausage_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "AA1",
+                "name": "Bacon",
+                "price": 1.40,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "AA2",
+                "name": "Cheese",
+                "options":"american, cheddar, prepper jack",
+                "price": 0.99,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "name": "Wendy's",
+        "url": "wendys",
+        "image": "/wendys.jpeg",
+        "main_meats": [
+            {
+                "id": "B1",
+                "name": "small patties (2oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 0.99,
+                "image": " ",
+                "alt": "small_patties_image"
+            },{
+                "id": "B2",
+                "name": "large patties (4oz)",
+                "genericNames": ["beef", "patty", "patties"],
+                "price": 1.29,
+                "image": " ",
+                "alt": "large_patties_image"
+            },{
+                "id": "B3",
+                "name": "sausage patty",
+                "price": 1.10,
+                "image": " ",
+                "alt": "sausage_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "BB1",
+                "name": "bacon",
+                "price": 1.40,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "BB2",
+                "name": "cheese",
+                "options":"american",
+                "price": 0.99,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "name": "Burger King",
+        "url": "burgerKing",
+        "image": "/Burger-King-Logo-1969.jpeg",
+        
+        "main_meats":[
+            {
+                "id": "C1",
+                "name": "whopper jr. patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "whopper_jr_image"
+            },{
+                "id": "C2",
+                "name": "whopper patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "whopper_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "CC1",
+
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "CC2",
+                "name": "cheese",
+                "options":"american, cheddar, prepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "name": "Chick-Fil-A",
+        "url": "chickFilA",
+        "image": "/chick-fil-a-logo.jpeg",
+        
+        "main_meats":[{
+            "id": "D1",
+            "name": "Grilled chicken fillet",
+            "price": 4.60,
+            "image": " ",
+            "alt": "grilled_chicken_image"
+        },
+        {
+            "id": "D2",
+            "name": "Grilled spicy chicken fillet",
+            "price": 4.60,
+            "image": " ",
+            "alt": "grilled_spicy_chicken_image"
+        },
+        {
+            "id": "D3",
+            "name": "Grilled Nuggets",
+            "options": [{"name":"4-ct-Grilled-Nuggets", "price": 2.32, "image": ""},{"name":"6-ct-Grilled-Nuggets", "price": 3.48, "image": "" }, {"name":"8-ct-Grilled-Nuggets", "price": 4.59, "image": ""}, {"name":"12-ct-Grilled-Nuggets", "price": 6.65, "image": ""}]
+        }
+        ],
+        "add_ons":[
+            {
+                "id": "DD1",
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "DD2",
+                "name": "sausage",
+                "price": 1.50,
+                "image": " ",
+                "alt": "sausage_image"
+            },
+            {
+                "id": "DD3",
+                "name": "cheese",
+                "options": "colby, american, pepper jack",
+                "price": 0.30,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+
+        ]
+    },
+    {
+        "name": "Sonic Drive Thru",
+        "url": "sonicDriveThru",
+        "image": "/sonic-logo.jpeg",
+        
+        "main_meats":[
+            {
+                "id": "E1",
+                "name": "Small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "id": "E2",
+                "name": "Large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "EE1",
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "EE2",
+                "name": "cheese",
+                "options":"american and pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "name": "Jack In The Box",
+        "url": "jackInTheBox",
+        "image": "/jack-in-the-box-logo.png",
+        
+        "main_meats":[
+            {
+                "id": "F1",
+                "name": "Small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "id": "F1",
+                "name": "large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "large_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "FF1",
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "FF2",
+                "name": "cheese",
+                "options":"american and pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    },
+    {
+        "name": "Five Guys",
+        "url": "fiveGuys",
+        "image": "/five_guys_logo.png",
+        
+        "main_meats":[
+            {
+                "id": "G1",
+                "name": "small patty (2oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.10,
+                "image": " ",
+                "alt": "small_patty_image"
+            },{
+                "id": "G1",
+                "name": "large patty (4oz)",
+                "genericNames": ["beef", "patties"],
+                "price": 1.70,
+                "image": " ",
+                "alt": "large_patty_image"
+            }
+        ],
+        "add_ons":[
+            {
+                "id": "GG1",
+                "name": "bacon",
+                "price": 1.10,
+                "image": " ",
+                "alt": "bacon_image"
+            },
+            {
+                "id": "GG2",
+                "name": "cheese",
+                "options": "colby, american, pepper jack",
+                "price": 0.60,
+                "image": " ",
+                "alt": "cheese_image"
+            }
+        ]
+    }
+    
+]
+

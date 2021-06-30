@@ -1,0 +1,25 @@
+* {
+  font-family: angie-sans, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
+.blocker {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  /* overflow: hidden; */
+  position: fixed;
+  z-index: 999;
+  background: linear-gradient(to top, #000, transparent);
+}
+.close-search-results-div {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  position: fixed;
+}
