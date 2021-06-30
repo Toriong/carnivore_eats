@@ -1,4 +1,4 @@
-// use this fn in DisplayOrderPriceSum.js, MeatItemModal.js, Cart.js
+// use this fn in MeatItemModal.js and Cart.js
 
 const getAddOnsInfo = (order, restaurant, newQuantity) => {
     let addOns = {

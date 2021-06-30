@@ -50,7 +50,6 @@ const Cart = () => {
 
             const meatItem = restaurant.main_meats.find((meat) => meat.id === order.meatItemId);
             const totalMeatItemPrice = order.quantity * meatItem.price;
-
             let addOns = { totalPrice: 0 };
 
             if (order.addOns) {
@@ -104,7 +103,7 @@ const Cart = () => {
     }, []);
 
     useEffect(() => {
-        const cartOrders_ = JSON.stringify(cartOrders)
+        const cartOrders_ = JSON.stringify(cartOrders);
         localStorage.setItem("confirmed orders", cartOrders_);
     }, [cartOrders]);
 

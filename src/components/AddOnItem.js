@@ -4,9 +4,6 @@ import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import '../css/addOnItem.css'
 
 
-
-
-
 const AddOnItem = ({ addOnItem, order, setOrder, computeOrderTotalPrice }) => {
 
     const [boxClicked, setBoxClicked] = useState(false);
