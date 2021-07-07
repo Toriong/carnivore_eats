@@ -7,8 +7,6 @@ import meatShops from '../data/Meat-Shops.json';
 import MeatItemModal from './MeatItemModal';
 import getAddOnsInfo from '../functions/getAddOnsInfo'
 
-// use flexbox to center and place your elements in your project
-// lessen divs in your project
 
 
 // will display the cart icon and the cart modal
@@ -18,54 +16,61 @@ const Cart = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
     const [selectedCartOrder, setSelectedCartOrder] = useState({});
+    const [isMeatModalOpenWithCartInfo, setIsMeatModalOpenWithCartInfo] = useState(false);
     const cartIsNotEmpty = !!cartOrders.orders.length;
     let totalOrders = 0;
     let cartTotalPrice = 0;
     let restaurant;
-    let meatItem;
 
     const closeMeatItemModal = () => {
+        const updatedOrders = cartOrders.orders.map((order) => {
+            if (order.orderId === selectedCartOrder.orderId) {
+                return selectedCartOrder;
+            }
+
+            return order
+        });
+        setCartOrders({
+            ...cartOrders,
+            orders: updatedOrders
+        });
         setIsMeatItemModalOpen(false);
-    };
+    }
 
     const cartToggle = () => {
         setIsCartOpen(!isCartOpen);
     };
 
-
     const openMeatItemModal = (cartOrder) => () => {
         setSelectedCartOrder(cartOrder);
+        setIsMeatModalOpenWithCartInfo(true);
         setIsMeatItemModalOpen(true);
+        setIsCartOpen(false);
     };
 
     let cartOrders_ = [];
 
-    // cart info
     if (cartOrders.orders.length) {
         restaurant = meatShops.find((shop) => shop.name === cartOrders.restaurant);
 
         totalOrders = cartOrders.orders.reduce((totalOrders_, order) => totalOrders_ + order.quantity, 0);
 
         cartTotalPrice = cartOrders.orders.reduce((cartTotalPrice_, order) => {
-
             const meatItem = restaurant.main_meats.find((meat) => meat.id === order.meatItemId);
             const totalMeatItemPrice = order.quantity * meatItem.price;
-            let addOns = { totalPrice: 0 };
+            const { totalPrice: addOnsTotalPrice, names: addOnNames } = getAddOnsInfo(order, restaurant);
 
             if (order.addOns) {
-                addOns = getAddOnsInfo(order, restaurant);
-
                 cartOrders_.push({
                     id: order.orderId,
-                    addOnNames: addOns.names,
-                    addOnsTotalPrice: addOns.totalPrice.toFixed(2)
+                    addOnNames: addOnNames,
+                    addOnsTotalPrice: addOnsTotalPrice.toFixed(2)
                 });
-            };
+            }
 
-            const cartOrderTotalPrice = totalMeatItemPrice + addOns.totalPrice;
+            const cartOrderTotalPrice = totalMeatItemPrice + addOnsTotalPrice;
 
-            // get the total price of each order
-            if (addOns.totalPrice) {
+            if (order.addOns) {
                 cartOrders_ = cartOrders_.map((order_) => {
                     if (order_.id === order.orderId) {
                         return {
@@ -87,15 +92,11 @@ const Cart = () => {
         }, 0);
     }
 
-    if (isMeatItemModalOpen) {
-        // 'meatItem' prop for the meatItemModal component
-        meatItem = restaurant.main_meats.find((meat) => meat.id === selectedCartOrder.meatItemId);
-    }
-
     useEffect(() => {
         const savedOrders = localStorage.getItem("confirmed orders");
+
         if (savedOrders) {
-            const savedOrders_ = JSON.parse(savedOrders)
+            const savedOrders_ = JSON.parse(savedOrders);
             setCartOrders(savedOrders_);
         } else {
             setCartOrders(dummyData);
@@ -188,12 +189,13 @@ const Cart = () => {
             <>
                 <div className="blocker" onClick={closeMeatItemModal} />
                 <MeatItemModal
-                    meatItem={meatItem}
+                    cartOrders_={cartOrders_}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
-                    setIsCartOpen={setIsCartOpen}
-                    selectedOrder={selectedCartOrder}
-                    isMeatModalOpenWithCartInfo
+                    cartOrder={selectedCartOrder}
+                    isMeatModalOpenWithCartInfo={isMeatModalOpenWithCartInfo}
                     isCartButtonsOnModal
+                    setIsMeatModalOpenWithCartInfo={setIsMeatModalOpenWithCartInfo}
+                    setIsCartOpen={setIsCartOpen}
                 />
             </>
         }

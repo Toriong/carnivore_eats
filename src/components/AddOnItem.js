@@ -1,54 +1,90 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
+import { CartInfoContext } from '../providers/CartInfoProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import '../css/addOnItem.css'
 
 
-const AddOnItem = ({ addOnItem, order, setOrder, computeOrderTotalPrice }) => {
-
+const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
+    const { _cartOrders } = useContext(CartInfoContext);
+    const [cartOrders, setCartOrders] = _cartOrders;
     const [boxClicked, setBoxClicked] = useState(false);
 
+
     const addAddOnToOrder = () => {
-        let addOns;
-        if (order.addOns) {
-            addOns = [...order.addOns, addOnItem.id]
-        } else {
-            addOns = [addOnItem.id]
-        }
-        setOrder({
-            ...order,
-            addOns: addOns
+        const updatedOrders = cartOrders.orders.map((order) => {
+            if (order.orderId === orderId) {
+                if (order.addOns) {
+                    return {
+                        ...order,
+                        addOns: [...order.addOns, addOnItem.id]
+                    }
+                } else {
+                    return {
+                        ...order,
+                        addOns: [addOnItem.id]
+                    }
+                }
+            }
+
+            return order
         });
+
+        setCartOrders({
+            ...cartOrders,
+            orders: updatedOrders
+        });
+        setAddOnBtnToggle()
         setBoxClicked(!boxClicked);
     };
 
     const deleteAddOnFromOrder = () => {
-        const addOns = order.addOns.filter((addOnId) => addOnId !== addOnItem.id)
-        setOrder({
-            ...order,
-            addOns: addOns
+        const order = cartOrders.orders.find(order => order.orderId === orderId);
+        const addOnsUpdated = order.addOns.filter(addOnId => addOnId !== addOnItem.id)
+        const updatedCartOrders = cartOrders.orders.map(order_ => {
+            if (order_.orderId === orderId) {
+
+                return {
+                    ...order_,
+                    addOns: addOnsUpdated
+                }
+            }
+
+            return order_
         });
+
+        setCartOrders({
+            ...cartOrders,
+            orders: updatedCartOrders
+        });
+        setAddOnBtnToggle();
         setBoxClicked(!boxClicked);
     };
 
 
     useEffect(() => {
-        if (order.addOns) {
-            order.addOns.forEach((addOnId) => {
-                if (addOnId === addOnItem.id) {
-                    setBoxClicked(true);
-                };
-            });
-        };
+        cartOrders.orders.forEach((order) => {
+            if (order.orderId === orderId) {
+                if (order.addOns) {
+                    order.addOns.forEach((addOnId) => {
+                        if (addOnId === addOnItem.id) {
+                            setBoxClicked(true);
+                        }
+                    })
+                }
+            }
+        })
+
     }, []);
 
-    useEffect(() => {
-        computeOrderTotalPrice()
-    }, [boxClicked, computeOrderTotalPrice]);
+
 
     return <li className="add-on">
         {boxClicked ?
-            <FontAwesomeIcon icon={faCheckSquare} onClick={deleteAddOnFromOrder} />
+            <FontAwesomeIcon icon={faCheckSquare}
+                onClick={deleteAddOnFromOrder}
+
+            />
             :
             <FontAwesomeIcon icon={faSquare} onClick={addAddOnToOrder} />
         }
