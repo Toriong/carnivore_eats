@@ -47,14 +47,8 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
     };
 
     const updateOrder = () => {
-        const updatedCartOrders = cartOrders.orders.map((cartOrder_) => {
+        const updatedCartOrders = cartOrders.orders.map(cartOrder_ => {
             if (cartOrder_.orderId === cartOrder.orderId) {
-                if (cartOrder_.addOns) {
-                    if (!(cartOrder_.addOns.length)) {
-                        delete cartOrder_.addOns
-                    }
-                }
-
                 return {
                     ...cartOrder_,
                     quantity: orderCount
@@ -82,9 +76,8 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
                 }
             });
         } else {
-            const order = cartOrders.orders.find(order => order.orderId === cartOrder.orderId);
-            // getAddOnsInfo || 0
-            const { totalPrice: addOnsTotalPrice } = getAddOnsInfo(order, restaurant, orderCount);
+            const orderUpdated = cartOrders.orders.find(order => order.orderId === cartOrder.orderId);
+            const { totalPrice: addOnsTotalPrice } = getAddOnsInfo(orderUpdated, restaurant, orderCount);
             const meatItemTotalPrice = meatItem.price * orderCount;
             setOrderPriceTotal((meatItemTotalPrice + addOnsTotalPrice).toFixed(2));
         }

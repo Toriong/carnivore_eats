@@ -39,17 +39,19 @@ const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
     };
 
     const deleteAddOnFromOrder = () => {
-        const order = cartOrders.orders.find(order => order.orderId === orderId);
-        const addOnsUpdated = order.addOns.filter(addOnId => addOnId !== addOnItem.id)
         const updatedCartOrders = cartOrders.orders.map(order_ => {
             if (order_.orderId === orderId) {
-
-                return {
-                    ...order_,
-                    addOns: addOnsUpdated
+                const addOnsUpdated = order_.addOns.filter(addOnId => addOnId !== addOnItem.id)
+                if (!addOnsUpdated.length) {
+                    delete order_.addOns
+                } else {
+                    return {
+                        ...order_,
+                        addOns: addOnsUpdated
+                    }
                 }
             }
-
+            console.log(order_);
             return order_
         });
 
@@ -61,6 +63,9 @@ const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
         setBoxClicked(!boxClicked);
     };
 
+    useEffect(() => {
+        console.log(cartOrders);
+    })
 
     useEffect(() => {
         cartOrders.orders.forEach((order) => {
