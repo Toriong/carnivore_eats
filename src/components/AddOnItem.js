@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { CartInfoContext } from '../providers/CartInfoProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
@@ -51,7 +51,7 @@ const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
                     }
                 }
             }
-            console.log(order_);
+
             return order_
         });
 
@@ -64,10 +64,6 @@ const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
     };
 
     useEffect(() => {
-        console.log(cartOrders);
-    })
-
-    useEffect(() => {
         cartOrders.orders.forEach((order) => {
             if (order.orderId === orderId) {
                 if (order.addOns) {
@@ -78,11 +74,9 @@ const AddOnItem = ({ addOnItem, orderId, setAddOnBtnToggle }) => {
                     })
                 }
             }
-        })
+        });
 
     }, []);
-
-
 
     return <li className="add-on">
         {boxClicked ?

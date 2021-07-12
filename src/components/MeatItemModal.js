@@ -26,10 +26,10 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
     const [orderPriceTotal, setOrderPriceTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
     const [addOnBtnToggled, setAddOnBtnToggled] = useState(false);
-    const restaurant = meatShops.find((restaurant) => restaurant.name === cartOrders.restaurant);
-    const meatItem = restaurant.main_meats.find((meat) => meat.id === cartOrder.meatItemId)
+    const restaurant = meatShops.find(restaurant => restaurant.name === cartOrders.restaurant);
+    const meatItem = restaurant.main_meats.find(meat => meat.id === cartOrder.meatItemId)
 
-    const addOnMenuToggle = () => {
+    const toggleAddOnMenu = () => {
         setIsAddOnMenuOpen(!isAddOnMenuOpen);
     };
 
@@ -67,7 +67,7 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
 
     useEffect(() => {
         if (isMeatModalOpenWithCartInfo) {
-            cartOrders_.forEach((order) => {
+            cartOrders_.forEach(order => {
                 if (order.id === cartOrder.orderId) {
                     setOrderPriceTotal(order.orderTotalPrice.toFixed(2));
                     setOrderCount(cartOrder.quantity)
@@ -76,8 +76,9 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
                 }
             });
         } else {
-            const orderUpdated = cartOrders.orders.find(order => order.orderId === cartOrder.orderId);
-            const { totalPrice: addOnsTotalPrice } = getAddOnsInfo(orderUpdated, restaurant, orderCount);
+            const order = cartOrders.orders.find(order => order.orderId === cartOrder.orderId);
+            // getAddOnsInfo || 0
+            const { totalPrice: addOnsTotalPrice } = getAddOnsInfo(order, restaurant, orderCount);
             const meatItemTotalPrice = meatItem.price * orderCount;
             setOrderPriceTotal((meatItemTotalPrice + addOnsTotalPrice).toFixed(2));
         }
@@ -94,7 +95,7 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
             <>
                 <span className="add-ons-text">
                     <h4>Add-ons:</h4>
-                    <FaAngleDown onClick={addOnMenuToggle} />
+                    <FaAngleDown onClick={toggleAddOnMenu} />
                 </span>
                 <ul className="add-ons-list-container">
                     {restaurant.add_ons.map((addOnItem) =>
@@ -109,7 +110,7 @@ const MeatItemModal = ({ cartOrders_, cartOrder, isMeatModalOpenWithCartInfo, is
             :
             <span className="add-ons-text">
                 <h4>Add-ons:</h4>
-                <FaAngleUp onClick={addOnMenuToggle} />
+                <FaAngleUp onClick={toggleAddOnMenu} />
             </span>
         }
         <section className="quantity-and-add-to-cart-container">

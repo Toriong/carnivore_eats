@@ -28,7 +28,7 @@ const Cart = () => {
                 return selectedCartOrder;
             }
 
-            return order
+            return order;
         });
         setCartOrders({
             ...cartOrders,
@@ -71,7 +71,7 @@ const Cart = () => {
             const cartOrderTotalPrice = totalMeatItemPrice + addOnsTotalPrice;
 
             if (order.addOns) {
-                cartOrders_ = cartOrders_.map((order_) => {
+                cartOrders_ = cartOrders_.map(order_ => {
                     if (order_.id === order.orderId) {
                         return {
                             ...order_,
@@ -118,8 +118,8 @@ const Cart = () => {
                 {/* 'cart-modal-wrapper' is for the scrolling*/}
                 <div className="cart-modal-wrapper">
                     <section className="your-order-container" >
-                        {totalOrders > 1 && <h1>Your orders</h1>}
-                        {totalOrders === 1 && <h1>Your order</h1>}
+                        {cartOrders.orders.length > 1 && <h1>Your orders</h1>}
+                        {cartOrders.orders.length === 1 && <h1>Your order</h1>}
                         {cartIsNotEmpty ? <h5>From {restaurant.name}</h5> : <h1>Cart is empty</h1>}
                     </section>
                     <ul className="cartOrders-list">
