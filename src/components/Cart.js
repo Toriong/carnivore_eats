@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { CartInfoContext } from "../providers/CartInfoProvider";
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, } from 'react-icons/fa';
@@ -16,26 +16,15 @@ const Cart = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
     const [selectedCartOrder, setSelectedCartOrder] = useState({});
-    const [isMeatModalOpenWithCartInfo, setIsMeatModalOpenWithCartInfo] = useState(false);
     const cartIsNotEmpty = !!cartOrders.orders.length;
     let totalOrders = 0;
     let cartTotalPrice = 0;
     let restaurant;
 
     const closeMeatItemModal = () => {
-        const updatedOrders = cartOrders.orders.map((order) => {
-            if (order.orderId === selectedCartOrder.orderId) {
-                return selectedCartOrder;
-            }
-
-            return order;
-        });
-        setCartOrders({
-            ...cartOrders,
-            orders: updatedOrders
-        });
         setIsMeatItemModalOpen(false);
     }
+
 
     const cartToggle = () => {
         setIsCartOpen(!isCartOpen);
@@ -43,7 +32,6 @@ const Cart = () => {
 
     const openMeatItemModal = (cartOrder) => () => {
         setSelectedCartOrder(cartOrder);
-        setIsMeatModalOpenWithCartInfo(true);
         setIsMeatItemModalOpen(true);
         setIsCartOpen(false);
     };
@@ -189,12 +177,10 @@ const Cart = () => {
             <>
                 <div className="blocker" onClick={closeMeatItemModal} />
                 <MeatItemModal
-                    cartOrders_={cartOrders_}
+                    meatItem={selectedCartOrder}
+                    setMeatItem={setSelectedCartOrder}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
-                    cartOrder={selectedCartOrder}
-                    isMeatModalOpenWithCartInfo={isMeatModalOpenWithCartInfo}
                     isCartButtonsOnModal
-                    setIsMeatModalOpenWithCartInfo={setIsMeatModalOpenWithCartInfo}
                     setIsCartOpen={setIsCartOpen}
                 />
             </>
