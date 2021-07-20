@@ -4,7 +4,7 @@ import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import '../css/addOnItem.css'
 
 
-const AddOnItem = ({ addOnItem, order, computeTotalOrderPrice, setOrder }) => {
+const AddOnItem = ({ addOnItem, order, computeOrderToggle, setOrder }) => {
     const [isAddOnOnOrder, setIsAddOnOnOrder] = useState(false);
 
     const addAddOnToOrder = () => {
@@ -14,25 +14,20 @@ const AddOnItem = ({ addOnItem, order, computeTotalOrderPrice, setOrder }) => {
             addOns: addOns_
         });
         setIsAddOnOnOrder(!isAddOnOnOrder);
+        computeOrderToggle();
     };
 
     const deleteAddOnFromOrder = () => {
         const addOns_ = order.addOns.filter(addOnId => addOnId !== addOnItem.id);
-        if (!addOns_.length) {
-            delete order.addOns
-        } else {
-            setOrder({
-                ...order,
-                addOns: addOns_
-            });
-        }
+        setOrder({
+            ...order,
+            addOns: addOns_
+        });
         setIsAddOnOnOrder(!isAddOnOnOrder);
+        computeOrderToggle();
     };
 
 
-    useEffect(() => {
-        computeTotalOrderPrice()
-    }, [isAddOnOnOrder]);
 
     useEffect(() => {
         if (order.addOns) {

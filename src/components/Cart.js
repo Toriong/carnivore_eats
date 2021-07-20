@@ -55,7 +55,7 @@ const Cart = () => {
                 cartOrders_.push({
                     id: order.orderId,
                     addOnNames: _addOnNames,
-                    addOnsTotalPrice: addOnsTotalPrice
+                    addOnsTotalPrice: addOnsTotalPrice.toFixed(2)
                 });
             }
 
@@ -65,7 +65,7 @@ const Cart = () => {
                     if (order_.id === order.orderId) {
                         return {
                             ...order_,
-                            orderTotalPrice: cartOrderTotalPrice
+                            orderTotalPrice: cartOrderTotalPrice.toFixed(2)
                         };
                     };
 
@@ -74,7 +74,7 @@ const Cart = () => {
             } else {
                 cartOrders_.push({
                     id: order.orderId,
-                    orderTotalPrice: cartOrderTotalPrice
+                    orderTotalPrice: cartOrderTotalPrice.toFixed(2)
                 });
             };
 
@@ -132,7 +132,7 @@ const Cart = () => {
                                         </span>
                                         {cartOrders_.map(order_ => {
                                             if (order_.id === order.orderId) {
-                                                return <span className="order-total-price">{"$" + (order_.orderTotalPrice).toFixed(2)}</span>
+                                                return <span className="order-total-price">{"$" + order_.orderTotalPrice}</span>
                                             }
 
                                             return null;

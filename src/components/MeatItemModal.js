@@ -25,6 +25,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
     const [orderCount, setOrderCount] = useState(order.quantity);
     const [orderPriceTotal, setOrderPriceTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
+    const [computeOrderToggle, setComputeOrderToggle] = useState(false)
     const restaurant = meatShops.find(restaurant => restaurant.name === cartOrders.restaurant);
     const meatItemInfo = restaurant.main_meats.find(meat => meat.id === order.meatItemId);
 
@@ -48,6 +49,12 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
     const updateOrder = () => {
         const updatedCartOrders = cartOrders.orders.map(cartOrder_ => {
             if (cartOrder_.orderId === order.orderId) {
+                if (order.addOns) {
+                    if (!order.addOns.length) {
+                        delete order.addOns;
+                    }
+                }
+                console.log(order);
                 return {
                     ...order,
                     quantity: orderCount
@@ -64,7 +71,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         setIsCartOpen(true);
     };
 
-    const computeTotalOrderPrice = () => {
+    useEffect(() => {
         let addOnsTotalPrice;
         if (order.addOns) {
             addOnsTotalPrice = getAddOnsInfo(order, restaurant, orderCount)._addOnsTotalPrice;
@@ -72,11 +79,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         const meatItemTotalPrice = meatItemInfo.price * orderCount;
         const orderTotalPrice_ = meatItemTotalPrice + (addOnsTotalPrice ?? 0);
         setOrderPriceTotal(orderTotalPrice_.toFixed(2));
-    }
-
-    useEffect(() => {
-        computeTotalOrderPrice();
-    }, [orderCount]);
+    }, [orderCount, computeOrderToggle]);
 
     useEffect(() => {
         if (order.orderId) {
@@ -103,7 +106,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
                             addOnItem={addOnItem}
                             order={order}
                             setOrder={setOrder}
-                            computeTotalOrderPrice={computeTotalOrderPrice}
+                            computeOrderToggle={() => setComputeOrderToggle(!computeOrderToggle)}
                         />
                     )}
                 </ul>
