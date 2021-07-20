@@ -1,26 +1,20 @@
 // use this fn in MeatItemModal.js and Cart.js
 
 const getAddOnsInfo = (order, restaurant, newQuantity) => {
-    let addOns = {
-        totalPrice: 0,
-        names: []
+    let addOnNames = []
+
+    const addOnsTotalPrice = order.addOns.reduce((addOnsTotalPrice, addOnId) => {
+        let addOn = restaurant.add_ons.find(addOn => addOn.id === addOnId);
+
+        addOnNames = [...addOnNames, addOn.name];
+
+        return addOnsTotalPrice + (addOn.price * (newQuantity ?? order.quantity));
+    }, 0);
+
+    return {
+        _addOnNames: addOnNames,
+        _addOnsTotalPrice: addOnsTotalPrice
     };
-
-    if (order.addOns) {
-        addOns.totalPrice = order.addOns.reduce((addOnsTotalPrice_, addOnId) => {
-            let addOn = restaurant.add_ons.find((addOn) => addOn.id === addOnId);
-
-            addOns.names = [...addOns.names, addOn.name]
-
-            if (newQuantity) {
-                return addOnsTotalPrice_ + (addOn.price * newQuantity)
-            } else {
-                return addOnsTotalPrice_ + (addOn.price * order.quantity);
-            }
-        }, 0);
-    }
-
-    return addOns;
 };
 
 export default getAddOnsInfo;

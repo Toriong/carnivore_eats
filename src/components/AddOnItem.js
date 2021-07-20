@@ -1,49 +1,50 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import '../css/addOnItem.css'
 
 
-const AddOnItem = ({ addOnItem, meatItem, computeOrderPrice, setMeatItem }) => {
-    const [boxClicked, setBoxClicked] = useState(false);
+const AddOnItem = ({ addOnItem, order, computeTotalOrderPrice, setOrder }) => {
+    const [isAddOnOnOrder, setIsAddOnOnOrder] = useState(false);
 
     const addAddOnToOrder = () => {
-        const addOns_ = meatItem.addOns ? [...meatItem.addOns, addOnItem.id] : [addOnItem.id]
-        setMeatItem({
-            ...meatItem,
+        const addOns_ = order.addOns ? [...order.addOns, addOnItem.id] : [addOnItem.id]
+        setOrder({
+            ...order,
             addOns: addOns_
         });
-        setBoxClicked(!boxClicked);
+        setIsAddOnOnOrder(!isAddOnOnOrder);
     };
 
     const deleteAddOnFromOrder = () => {
-        const addOns_ = meatItem.addOns.filter(addOnId => addOnId !== addOnItem.id);
+        const addOns_ = order.addOns.filter(addOnId => addOnId !== addOnItem.id);
         if (!addOns_.length) {
-            delete meatItem.addOns
+            delete order.addOns
         } else {
-            setMeatItem({
-                ...meatItem,
+            setOrder({
+                ...order,
                 addOns: addOns_
             });
         }
-        setBoxClicked(!boxClicked);
+        setIsAddOnOnOrder(!isAddOnOnOrder);
     };
 
-    useEffect(() => {
-        computeOrderPrice()
-    }, [boxClicked]);
 
     useEffect(() => {
-        if (meatItem.addOns) {
-            const addOn = meatItem.addOns.find(addOnId => addOnId === addOnItem.id);
+        computeTotalOrderPrice()
+    }, [isAddOnOnOrder]);
+
+    useEffect(() => {
+        if (order.addOns) {
+            const addOn = order.addOns.find(addOnId => addOnId === addOnItem.id);
             if (addOn) {
-                setBoxClicked(true);
+                setIsAddOnOnOrder(true);
             }
         }
     }, [])
 
     return <li className="add-on">
-        {boxClicked ?
+        {isAddOnOnOrder ?
             <FontAwesomeIcon icon={faCheckSquare}
                 onClick={deleteAddOnFromOrder}
 
@@ -54,6 +55,7 @@ const AddOnItem = ({ addOnItem, meatItem, computeOrderPrice, setMeatItem }) => {
         <span className="addOn-name">{addOnItem.name} </span>
         <span className="addOn-price">+${(addOnItem.price).toFixed(2)}</span>
     </li>
+
 }
 
 export default AddOnItem

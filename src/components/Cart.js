@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { CartInfoContext } from "../providers/CartInfoProvider";
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, } from 'react-icons/fa';
@@ -38,26 +38,28 @@ const Cart = () => {
 
     let cartOrders_ = [];
 
+
     if (cartOrders.orders.length) {
-        restaurant = meatShops.find((shop) => shop.name === cartOrders.restaurant);
+        restaurant = meatShops.find(shop => shop.name === cartOrders.restaurant);
 
         totalOrders = cartOrders.orders.reduce((totalOrders_, order) => totalOrders_ + order.quantity, 0);
 
         cartTotalPrice = cartOrders.orders.reduce((cartTotalPrice_, order) => {
             const meatItem = restaurant.main_meats.find((meat) => meat.id === order.meatItemId);
             const totalMeatItemPrice = order.quantity * meatItem.price;
-            const { totalPrice: addOnsTotalPrice, names: addOnNames } = getAddOnsInfo(order, restaurant);
+            let addOnsTotalPrice;
 
             if (order.addOns) {
+                const { _addOnsTotalPrice, _addOnNames } = getAddOnsInfo(order, restaurant);
+                addOnsTotalPrice = _addOnsTotalPrice;
                 cartOrders_.push({
                     id: order.orderId,
-                    addOnNames: addOnNames,
-                    addOnsTotalPrice: addOnsTotalPrice.toFixed(2)
+                    addOnNames: _addOnNames,
+                    addOnsTotalPrice: addOnsTotalPrice
                 });
             }
 
-            const cartOrderTotalPrice = totalMeatItemPrice + addOnsTotalPrice;
-
+            const cartOrderTotalPrice = totalMeatItemPrice + (addOnsTotalPrice ?? 0);
             if (order.addOns) {
                 cartOrders_ = cartOrders_.map(order_ => {
                     if (order_.id === order.orderId) {
@@ -96,6 +98,10 @@ const Cart = () => {
         localStorage.setItem("confirmed orders", cartOrders_);
     }, [cartOrders]);
 
+    useEffect(() => {
+        console.log(cartOrders_)
+    })
+
     return <>
         <section id="cart" onClick={cartToggle}>
             <span id="cart-text"><FaShoppingCart />  Cart : {totalOrders}</span>
@@ -111,12 +117,12 @@ const Cart = () => {
                         {cartIsNotEmpty ? <h5>From {restaurant.name}</h5> : <h1>Cart is empty</h1>}
                     </section>
                     <ul className="cartOrders-list">
-                        {cartIsNotEmpty && cartOrders.orders.map((order) =>
+                        {cartIsNotEmpty && cartOrders.orders.map(order =>
                             <>
                                 <li className="cartOrder" onClick={openMeatItemModal(order)}>
                                     <section className="cartOrder-name-and-price">
                                         <span>
-                                            {order.quantity} x {restaurant.main_meats.map((meat) => {
+                                            {order.quantity} x {restaurant.main_meats.map(meat => {
                                                 if (meat.id === order.meatItemId) {
                                                     return meat.name
                                                 }
@@ -124,7 +130,7 @@ const Cart = () => {
                                                 return null;
                                             })}
                                         </span>
-                                        {cartOrders_.map((order_) => {
+                                        {cartOrders_.map(order_ => {
                                             if (order_.id === order.orderId) {
                                                 return <span className="order-total-price">{"$" + (order_.orderTotalPrice).toFixed(2)}</span>
                                             }
@@ -134,7 +140,7 @@ const Cart = () => {
                                     </section>
                                     {order.addOns &&
                                         <section className="addOn-container">
-                                            <span> ADD-ONS ${cartOrders_.map((order_) => {
+                                            <span> ADD-ONS ${cartOrders_.map(order_ => {
                                                 if (order_.id === order.orderId) {
                                                     return order_.addOnsTotalPrice
                                                 }
@@ -168,7 +174,8 @@ const Cart = () => {
                                     <button>
                                         <span className="checkout-button-text">Go to checkout: <span className="cart-total-price">${cartTotalPrice.toFixed(2)}</span></span>
                                     </button>
-                                </Link>}
+                                </Link>
+                            }
                         </div>
                     </div>
                 </div>
@@ -177,8 +184,8 @@ const Cart = () => {
             <>
                 <div className="blocker" onClick={closeMeatItemModal} />
                 <MeatItemModal
-                    meatItem={selectedCartOrder}
-                    setMeatItem={setSelectedCartOrder}
+                    order={selectedCartOrder}
+                    setOrder={setSelectedCartOrder}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
                     isCartButtonsOnModal
                     setIsCartOpen={setIsCartOpen}

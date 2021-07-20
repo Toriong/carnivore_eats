@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import meatShops from '../data/Meat-Shops.json';
 import AddOnItem from '../components/AddOnItem';
 import getAddOnsInfo from '../functions/getAddOnsInfo';
@@ -10,24 +10,23 @@ import '../css/meatItemModal.css'
 
 // NOTES:
 // -where all of the computations/editing for an order will occur
-// selectedOrder will take in the following object if it was opened from the Restaurant component:
+
+
+
+// 'order' from restauaddrant component
 // {
-//  meatItemId: (id of the meat item)
-//  restaurant: (name of restaurant)
+//     meatItem: "id of meat item",
+//     quantity: 1
 // }
-// need to use the meatItem variable in order to display the info of the meat item when the user clicks on the meat item from the restaurant menu page 
 
-
-const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatItemModalOpen, setIsCartOpen }) => {
+const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemModalOpen, setIsCartOpen }) => {
     const { _cartOrders } = useContext(CartInfoContext);
     const [cartOrders, setCartOrders] = _cartOrders;
-    const defaultOrderCount = meatItem.quantity ? meatItem.quantity : 1
-    const [orderCount, setOrderCount] = useState(defaultOrderCount);
+    const [orderCount, setOrderCount] = useState(order.quantity);
     const [orderPriceTotal, setOrderPriceTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
     const restaurant = meatShops.find(restaurant => restaurant.name === cartOrders.restaurant);
-    let meatItemInfo = restaurant.main_meats.find(meat => meat.id === meatItem.meatItemId);
-
+    const meatItemInfo = restaurant.main_meats.find(meat => meat.id === order.meatItemId);
 
     const toggleAddOnMenu = () => {
         setIsAddOnMenuOpen(!isAddOnMenuOpen);
@@ -38,7 +37,7 @@ const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatI
     }
 
     const removeOrder = () => {
-        const updatedCartOrders = cartOrders.orders.filter((order) => order.orderId !== meatItem.orderId);
+        const updatedCartOrders = cartOrders.orders.filter(order_ => order_.orderId !== order.orderId);
         setCartOrders({
             ...cartOrders,
             orders: updatedCartOrders
@@ -48,9 +47,9 @@ const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatI
 
     const updateOrder = () => {
         const updatedCartOrders = cartOrders.orders.map(cartOrder_ => {
-            if (cartOrder_.orderId === meatItem.orderId) {
+            if (cartOrder_.orderId === order.orderId) {
                 return {
-                    ...meatItem,
+                    ...order,
                     quantity: orderCount
                 }
             };
@@ -65,18 +64,22 @@ const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatI
         setIsCartOpen(true);
     };
 
-    const computeOrderPrice = () => {
-        const { totalPrice: addOnsTotalPrice } = getAddOnsInfo(meatItem, restaurant, orderCount);
+    const computeTotalOrderPrice = () => {
+        let addOnsTotalPrice;
+        if (order.addOns) {
+            addOnsTotalPrice = getAddOnsInfo(order, restaurant, orderCount)._addOnsTotalPrice;
+        }
         const meatItemTotalPrice = meatItemInfo.price * orderCount;
-        setOrderPriceTotal((meatItemTotalPrice + addOnsTotalPrice).toFixed(2));
+        const orderTotalPrice_ = meatItemTotalPrice + (addOnsTotalPrice ?? 0);
+        setOrderPriceTotal(orderTotalPrice_.toFixed(2));
     }
 
     useEffect(() => {
-        computeOrderPrice()
+        computeTotalOrderPrice();
     }, [orderCount]);
 
     useEffect(() => {
-        if (meatItem.orderId) {
+        if (order.orderId) {
             setIsAddOnMenuOpen(true);
         }
     }, []);
@@ -95,12 +98,12 @@ const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatI
                     <FaAngleDown onClick={toggleAddOnMenu} />
                 </span>
                 <ul className="add-ons-list-container">
-                    {restaurant.add_ons.map((addOnItem) =>
+                    {restaurant.add_ons.map(addOnItem =>
                         <AddOnItem
                             addOnItem={addOnItem}
-                            meatItem={meatItem}
-                            setMeatItem={setMeatItem}
-                            computeOrderPrice={computeOrderPrice}
+                            order={order}
+                            setOrder={setOrder}
+                            computeTotalOrderPrice={computeTotalOrderPrice}
                         />
                     )}
                 </ul>
@@ -131,11 +134,11 @@ const MeatItemModal = ({ meatItem, setMeatItem, isCartButtonsOnModal, setIsMeatI
                         :
                         <button className="add-to-cart-button" onClick>
                             <span>Add {orderCount} to cart</span>
-                            {orderPriceTotal > meatItem.price
+                            {orderPriceTotal > meatItemInfo.price
                                 ?
                                 <div className="orderPriceTotal"> ${orderPriceTotal}</div>
                                 :
-                                <div className="orderPriceTotal"> ${meatItem.price.toFixed(2)}</div>
+                                <div className="orderPriceTotal"> ${meatItemInfo.price.toFixed(2)}</div>
                             }
                         </button>
                 }
