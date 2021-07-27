@@ -36,7 +36,13 @@ const AddOnItem = ({ addOnItem, order, computeOrderToggle, setOrder }) => {
                 setIsAddOnOnOrder(true);
             }
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (order.addOns && !order.addOns.length) {
+            delete order.addOns;
+        }
+    }, [order.addOns]);
 
     return <li className="add-on">
         {isAddOnOnOrder ?

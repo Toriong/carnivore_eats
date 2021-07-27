@@ -1,32 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import { CartInfoContext } from '../providers/CartInfoProvider';
+import { IsModalOpenContext } from '../providers/IsModalOpenProvider'
+import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import meatShops from '../data/Meat-Shops.json';
 import AddOnItem from '../components/AddOnItem';
 import getAddOnsInfo from '../functions/getAddOnsInfo';
-import { CartInfoContext } from '../providers/CartInfoProvider';
-import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import '../css/meatItemModal.css'
 
 
-
-// NOTES:
-// -where all of the computations/editing for an order will occur
-
-
-
-// 'order' from restauaddrant component
-// {
-//     meatItem: "id of meat item",
-//     quantity: 1
-// }
-
-const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemModalOpen, setIsCartOpen }) => {
+const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemModalOpen }) => {
+    const { restaurant_ } = useParams();
     const { _cartOrders } = useContext(CartInfoContext);
+    const { _isCartOpen } = useContext(IsModalOpenContext);
     const [cartOrders, setCartOrders] = _cartOrders;
+    const [, setIsCartOpen] = _isCartOpen;
     const [orderCount, setOrderCount] = useState(order.quantity);
     const [orderPriceTotal, setOrderPriceTotal] = useState(0);
     const [isAddOnMenuOpen, setIsAddOnMenuOpen] = useState(false);
     const [computeOrderToggle, setComputeOrderToggle] = useState(false)
-    const restaurant = meatShops.find(restaurant => restaurant.name === cartOrders.restaurant);
+    const restaurant = meatShops.find(res => isCartButtonsOnModal ? res.name === cartOrders.restaurant : res.url === restaurant_);
     const meatItemInfo = restaurant.main_meats.find(meat => meat.id === order.meatItemId);
 
     const toggleAddOnMenu = () => {
@@ -37,7 +30,8 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         setOrderCount(quantity);
     }
 
-    const removeOrder = () => {
+    const removeOrder = event => {
+        event.preventDefault();
         const updatedCartOrders = cartOrders.orders.filter(order_ => order_.orderId !== order.orderId);
         setCartOrders({
             ...cartOrders,
@@ -46,15 +40,10 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         setIsMeatItemModalOpen(false);
     };
 
-    const updateOrder = () => {
+    const updateOrder = event => {
+        event.preventDefault();
         const updatedCartOrders = cartOrders.orders.map(cartOrder_ => {
             if (cartOrder_.orderId === order.orderId) {
-                if (order.addOns) {
-                    if (!order.addOns.length) {
-                        delete order.addOns;
-                    }
-                }
-                console.log(order);
                 return {
                     ...order,
                     quantity: orderCount
@@ -70,6 +59,22 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         setIsMeatItemModalOpen(false);
         setIsCartOpen(true);
     };
+
+    const addToCart = event => {
+        event.preventDefault();
+        const newOrder = {
+            orderId: Math.random().toString(16).slice(2),
+            ...order,
+            quantity: orderCount
+        }
+        const orders_ = [...cartOrders.orders, newOrder];
+        setCartOrders({
+            ...cartOrders,
+            orders: orders_
+        });
+        setIsMeatItemModalOpen(false);
+        setIsCartOpen(true);
+    }
 
     useEffect(() => {
         let addOnsTotalPrice;
@@ -87,7 +92,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         }
     }, []);
 
-    return <section className="selected-food-modal">
+    return <section className={isCartButtonsOnModal ? "selected-food-modal cart" : "selected-food-modal"}>
         <section className="picture-container">
             <img src={meatItemInfo.image} alt={meatItemInfo.alt} />
         </section>
@@ -129,13 +134,15 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
                     isCartButtonsOnModal
                         ?
                         <button className="add-to-cart-button"
-                            onClick={updateOrder}
+                            onClick={event => { updateOrder(event) }}
                         >
                             <span>Update Order</span>
                             <div className="orderPriceTotal"> ${orderPriceTotal}</div>
                         </button>
                         :
-                        <button className="add-to-cart-button" onClick>
+                        <button className="add-to-cart-button"
+                            onClick={event => { addToCart(event) }}
+                        >
                             <span>Add {orderCount} to cart</span>
                             {orderPriceTotal > meatItemInfo.price
                                 ?
@@ -151,7 +158,7 @@ const MeatItemModal = ({ order, setOrder, isCartButtonsOnModal, setIsMeatItemMod
         {isCartButtonsOnModal &&
             <section className="remove-item-button-container">
                 <button className="remove-item-button"
-                    onClick={removeOrder}
+                    onClick={event => { removeOrder(event) }}
                 >
                     <h4>Remove item</h4>
                 </button>

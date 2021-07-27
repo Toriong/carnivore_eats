@@ -1,0 +1,30 @@
+.items {
+  width: 100%;
+  padding: 3% 0px 0px 5%;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  /* border: solid 2px pink; */
+}
+
+.title-container {
+  height: 15vh;
+  margin: 0% 0px 1% 0px;
+  position: relative;
+}
+
+.title-container h2 {
+  position: absolute;
+  bottom: 0;
+}
+
+.meatItems-container {
+  display: flex;
+  width: 95%;
+  height: 100vh;
+}
+
+.meatItems-container > div {
+  display: inline-block;
+  /* margin: 0px 2px 0px 2px; */
+}

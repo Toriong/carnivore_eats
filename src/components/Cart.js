@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { CartInfoContext } from "../providers/CartInfoProvider";
+import { IsModalOpenContext } from "../providers/IsModalOpenProvider"
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, } from 'react-icons/fa';
 import dummyData from '../data/dummyData.json';
@@ -12,8 +13,9 @@ import getAddOnsInfo from '../functions/getAddOnsInfo'
 // will display the cart icon and the cart modal
 const Cart = () => {
     const { _cartOrders } = useContext(CartInfoContext);
+    const { _isCartOpen } = useContext(IsModalOpenContext);
+    const [isCartOpen, setIsCartOpen] = _isCartOpen;
     const [cartOrders, setCartOrders] = _cartOrders;
-    const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
     const [selectedCartOrder, setSelectedCartOrder] = useState({});
     const cartIsNotEmpty = !!cartOrders.orders.length;
@@ -84,7 +86,6 @@ const Cart = () => {
 
     useEffect(() => {
         const savedOrders = localStorage.getItem("confirmed orders");
-
         if (savedOrders) {
             const savedOrders_ = JSON.parse(savedOrders);
             setCartOrders(savedOrders_);
@@ -98,9 +99,6 @@ const Cart = () => {
         localStorage.setItem("confirmed orders", cartOrders_);
     }, [cartOrders]);
 
-    useEffect(() => {
-        console.log(cartOrders_)
-    })
 
     return <>
         <section id="cart" onClick={cartToggle}>
@@ -108,7 +106,9 @@ const Cart = () => {
         </section>
         {/* cart modal */}
         {isCartOpen &&
-            <section className="cart-modal">
+            <section className="cart-modal" style={{
+                height: cartOrders.orders.length === 1 && "fit-content"
+            }}>
                 {/* 'cart-modal-wrapper' is for the scrolling*/}
                 <div className="cart-modal-wrapper">
                     <section className="your-order-container" >
@@ -188,7 +188,6 @@ const Cart = () => {
                     setOrder={setSelectedCartOrder}
                     setIsMeatItemModalOpen={setIsMeatItemModalOpen}
                     isCartButtonsOnModal
-                    setIsCartOpen={setIsCartOpen}
                 />
             </>
         }
