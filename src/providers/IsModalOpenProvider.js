@@ -6,15 +6,16 @@ export const IsModalOpenContext = createContext()
 export const IsModalOpenProvider = (props) => {
 
     // the conditionals for opening the modal
-    const [isModalWithCartInfoOpen, setIsModalWithCartInfoOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
     // is the meat item modal displaying the meat item from the search bar? 
     const [isMeatModalFromSearchBarOpen, setIsMeatModalFromSearchBarOpen] = useState(false);
     const [isSearchResultsContainerOpen, setIsSearchResultsContainerOpen] = useState(false);
     const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 
+
     return <IsModalOpenContext.Provider value={{
         _openMeatItemModalFromSearchBar: [isMeatModalFromSearchBarOpen, setIsMeatModalFromSearchBarOpen],
-        _isModalWithCartInfoOpen: [isModalWithCartInfoOpen, setIsModalWithCartInfoOpen],
+        _isCartOpen: [isCartOpen, setIsCartOpen],
         _isOrderMeatOrGoToRestrModalOpen: [isNavModalOpen, setIsNavModalOpen],
         _isSearchResultsContainerOpen: [isSearchResultsContainerOpen, setIsSearchResultsContainerOpen],
     }}>

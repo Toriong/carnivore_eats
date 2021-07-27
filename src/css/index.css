@@ -11,7 +11,8 @@
   width: 100%;
   left: 0;
   top: 0;
-  /* overflow: hidden; */
+  overflow: hidden;
+  margin: 0;
   position: fixed;
   z-index: 999;
   background: linear-gradient(to top, #000, transparent);

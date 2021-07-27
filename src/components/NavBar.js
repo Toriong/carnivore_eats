@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Cart from './Cart';
 import '../css/navBar.css';
 import '../css/cart.css';
@@ -8,6 +9,11 @@ import '../css/cart.css';
 
 
 const NavBar = () => {
+    const history = useHistory();
+    const goToHomePage = () => {
+        history.push("/");
+    }
+
 
     return <div className="unfixed-wrapper">
         <div className="navbar">
@@ -18,7 +24,7 @@ const NavBar = () => {
                     <div id="hamburger-line-3" className="hamburger-line"></div>
                 </div>
             </div>
-            <div className="logo-container">
+            <div className="logo-container" onClick={goToHomePage}>
                 <div id="quick-text">
                     Quick
                     </div>

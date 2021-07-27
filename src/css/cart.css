@@ -1,3 +1,11 @@
+:root {
+  --containerBackgroundColor: lightgray;
+  --containerBorderColor: solid lightgray 0.8px;
+  --containerWidth: 80%;
+  --containerHeight: 50%;
+  --containerBorderRadius: 2vh;
+}
+
 .cart-container {
   width: 200px;
   height: 100%;
@@ -94,6 +102,7 @@
 }
 
 .proceed-to-checkout-button-fixed-container {
+  border-top: var(--containerBorderColor);
   display: flex;
   align-items: center;
   justify-content: center;
